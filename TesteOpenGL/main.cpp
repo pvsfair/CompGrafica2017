@@ -36,18 +36,26 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 void handleResize(int w, int h) {
 
 }
+
+void mouseFunc(int button, int state, int x, int y) {
+	if (state == GLUT_UP) {
+		cout << x << ',' << y << endl;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	FrameBuffer *fb = FrameBuffer::getInstance();
-	fb->setPixel(3, 4, Color(255, 10, 40));
+	/*fb->setPixel(3, 4, Color(255, 10, 40));
 	DrawLib::printCirculo(50, 50, 47);
-	DrawLib::floodFill(50, 50, Color(255, 255, 0));
 	DrawLib::printCirculo(30, 30, 12);
 	DrawLib::printCirculo(70, 30, 12);
+	DrawLib::floodFill(50, 50, Color(255, 255, 0));
 	DrawLib::printCirculo(50, 50, 5);
+	DrawLib::floodFill(50, 50, Color(255, 0, 0));
 
 	DrawLib::printElipse(50, 75, 28, 7);
-
+	DrawLib::floodFill(50, 75, Color(150, 150, 150));
 	DrawLib::printLinha(23, 75, 77, 75);
 	DrawLib::printLinha(50, 81, 50, 69);
 	DrawLib::printLinha(42, 81, 42, 69);
@@ -56,6 +64,8 @@ int main(int argc, char *argv[])
 	DrawLib::printLinha(66, 80, 66, 70);
 	DrawLib::printLinha(26, 78, 26, 72);
 	DrawLib::printLinha(74, 78, 74, 72);
+	*/
+	DrawLib::printLinha(0, 9, 3, 3);
 	/*
 	DrawLib::printLinha(0, 10, 31, 12);
 
@@ -86,6 +96,8 @@ int main(int argc, char *argv[])
 	glutDisplayFunc(displayCB);		/* set window's display callback */
 	glutKeyboardFunc(keyCB);		/* set window's key callback */
 	
+	glutMouseFunc(mouseFunc);
+
 	glutReshapeFunc(handleResize);
 
 	glutMainLoop();			/* start processing events... */

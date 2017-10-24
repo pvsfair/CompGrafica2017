@@ -1,6 +1,7 @@
 #include "DrawLib.h"
 #include <iostream>
 #include <algorithm>
+#include <list>
 
 using namespace std;
 
@@ -139,26 +140,27 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 
 void DrawLib::floodFill(int x, int y, Color paintColor)
 {
-	cout << "entrando\n";
 	FrameBuffer *fb = FrameBuffer::getInstance();
 	Color bg = fb->getPixel(x, y);
-	FrameBuffer::getInstance()->setPixel(x, y, paintColor);
-	floodFill(x+1, y, paintColor, bg, fb);
-	floodFill(x, y+1, paintColor, bg, fb);
-	floodFill(x-1, y, paintColor, bg, fb);
-	floodFill(x, y-1, paintColor, bg, fb);
-}
+	std::list<std::pair<int, int>> Q;
+	Q.emplace_back(x, y);
 
-void DrawLib::floodFill(int x, int y, Color paintColor, Color bgColor, FrameBuffer *fb)
-{
-	Color current = FrameBuffer::getInstance()->getPixel(x, y);
-	if (current == bgColor && current != paintColor) {
-		//cout << "pintando " << x << ' ' << y << endl;
-		FrameBuffer::getInstance()->setPixel(x, y, paintColor);
-		floodFill(x + 1, y, paintColor, bgColor, fb);
-		floodFill(x, y + 1, paintColor, bgColor, fb);
-		floodFill(x - 1, y, paintColor, bgColor, fb);
-		floodFill(x, y - 1, paintColor, bgColor, fb);
+	Color current;
+	pair<int, int> currentPos;
+	while (Q.size() > 0) {
+		currentPos = Q.front();
+		x = currentPos.first;
+		y = currentPos.second;
+		current = fb->getPixel(currentPos.first, currentPos.second);	
+
+		if (current == bg && current != paintColor) {
+			fb->setPixel(x, y, paintColor);
+			Q.emplace_back(x + 1, y);
+			Q.emplace_back(x, y + 1);
+			Q.emplace_back(x - 1, y);
+			Q.emplace_back(x, y - 1);
+		}
+		Q.pop_front();
 	}
 }
 

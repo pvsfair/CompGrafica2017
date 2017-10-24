@@ -28,7 +28,6 @@ private:
 	static void printPontoLinha(int x, int y, bool trocas[]);
 	static void printPontocirculo(int xc, int yc, int x0, int y0, bool fill = false);
 	static void printPontoElipse(int xc, int yc, int x, int y);
-	static void floodFill(int x, int y, Color paintColor, Color bgColor, FrameBuffer *fb);
 
 public:
 	static void printLinha(int x0, int y0, int x1, int y1);
