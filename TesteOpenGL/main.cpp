@@ -64,6 +64,9 @@ void displayCB(void)		/* function called whenever redisplay needed */
 			glVertex2i(i*fb->pixelSize + fb->pixelSize, j*fb->pixelSize + fb->pixelSize);
 			glVertex2i(i*fb->pixelSize + fb->pixelSize, j*fb->pixelSize);
 			glEnd();
+			/*glBegin(GL_POINTS);
+			glVertex2i(i, j);
+			glEnd();*/
 		}
 	}
 	text();
@@ -110,79 +113,85 @@ void handleResize(int w, int h) {
 FrameBuffer *temp = nullptr;
 
 void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or mouseKeyDown
-	if (state == GLUT_DOWN) {
-		int pixelSize = FrameBuffer::getInstance()->pixelSize;
-		int xScreen = x / pixelSize;
-		int yScreen = y / pixelSize;
-		click = pair<int, int>(xScreen, yScreen);
-		temp = FrameBuffer::getInstance();
-	}
-	else if (state == GLUT_UP) {
-		temp = nullptr;
-		click = pair<int, int>(-1, -1);
-		FrameBuffer::getInstance()->copyTempToFinalBuffer();
-	}
-	/*if (state == GLUT_UP) {
-		int pixelSize = FrameBuffer::getInstance()->pixelSize;
-		int xScreen = x / pixelSize;
-		int yScreen = y / pixelSize;
-		std::cout << xScreen << ',' << yScreen << endl;
-		switch (FrameBuffer::getInstance()->toolSelected)
-		{
-		case 1:
-			if (click.first < 0) {
-				click = pair<int, int>(xScreen, yScreen);
-			}
-			else {
-				DrawLib::printLinha(click, pair<int, int>(xScreen, yScreen), Color(0, 0, 0));
-				click = pair<int, int>(-1, -1);
-			}
-			break;
-		case 2:
-			if (click.first < 0) {
-				click = pair<int, int>(xScreen, yScreen);
-			}
-			else {
-				int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
-				DrawLib::printCirculo(click, raio);
-				click = pair<int, int>(-1, -1);
-			}
-			break;
-		case 3:
-			if (click.first < 0) {
-				click = pair<int, int>(xScreen, yScreen);
-			}
-			else {
-				int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
-				int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
-				DrawLib::printElipse(click.first, yScreen, w, h);
-				click = pair<int, int>(-1, -1);
-			}
-			break;
-		case 4:
-			DrawLib::floodFill(xScreen, yScreen, Color(0, 0, 255));
-			break;
-		case 5:
-			FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(100, 15, 100));
-			break;
-		default:
-			break;
+	if (FrameBuffer::getInstance()->toolSelected == 1) {
+		if (state == GLUT_DOWN) {
+			int pixelSize = FrameBuffer::getInstance()->pixelSize;
+			int xScreen = x / pixelSize;
+			int yScreen = y / pixelSize;
+			click = pair<int, int>(xScreen, yScreen);
+			temp = FrameBuffer::getInstance();
 		}
-		glutPostRedisplay();
-	}*/
+		else if (state == GLUT_UP) {
+			temp = nullptr;
+			click = pair<int, int>(-1, -1);
+			FrameBuffer::getInstance()->copyTempToFinalBuffer();
+		}
+	}
+	else {
+		if (state == GLUT_UP) {
+			int pixelSize = FrameBuffer::getInstance()->pixelSize;
+			int xScreen = x / pixelSize;
+			int yScreen = y / pixelSize;
+			std::cout << xScreen << ',' << yScreen << endl;
+			switch (FrameBuffer::getInstance()->toolSelected)
+			{
+			case 1:
+				if (click.first < 0) {
+					click = pair<int, int>(xScreen, yScreen);
+				}
+				else {
+					DrawLib::printLinha(click, pair<int, int>(xScreen, yScreen), Color(0, 0, 0));
+					click = pair<int, int>(-1, -1);
+				}
+				break;
+			case 2:
+				if (click.first < 0) {
+					click = pair<int, int>(xScreen, yScreen);
+				}
+				else {
+					int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
+					DrawLib::printCirculo(click, raio);
+					click = pair<int, int>(-1, -1);
+				}
+				break;
+			case 3:
+				if (click.first < 0) {
+					click = pair<int, int>(xScreen, yScreen);
+				}
+				else {
+					int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
+					int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
+					DrawLib::printElipse(click.first, yScreen, w, h);
+					click = pair<int, int>(-1, -1);
+				}
+				break;
+			case 4:
+				DrawLib::floodFill(xScreen, yScreen, Color(0, 0, 255));
+				break;
+			case 5:
+				FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(100, 15, 100));
+				break;
+			default:
+				break;
+			}
+			glutPostRedisplay();
+		}
+	}
 }
 
 void motionFunc(int x, int y) {
-	int pixelSize = FrameBuffer::getInstance()->pixelSize;
-	int xScreen = x / pixelSize;
-	int yScreen = y / pixelSize;
-	pair<int, int> ponto = pair<int, int>(xScreen, yScreen);
-	if (click.first >= 0) {
-		std::cout << xScreen << ',' << yScreen << endl;	
+	if (FrameBuffer::getInstance()->toolSelected == 1) {
+		int pixelSize = FrameBuffer::getInstance()->pixelSize;
+		int xScreen = x / pixelSize;
+		int yScreen = y / pixelSize;
+		pair<int, int> ponto = pair<int, int>(xScreen, yScreen);
+		if (click.first >= 0) {
+			std::cout << xScreen << ',' << yScreen << endl;
 
-		DrawLib::printLinha(click, ponto, Color(23, 42, 148), true);
+			DrawLib::printLinha(click, ponto, Color(23, 42, 148), true);
 
-		glutPostRedisplay();
+			glutPostRedisplay();
+		}
 	}
 }
 
@@ -224,7 +233,6 @@ int main(int argc, char *argv[])
 	poli1.emplace_back(20, 20);
 	poli1.emplace_back(20, 50);
 	poli1.emplace_back(50, 50);
-	poli1.emplace_back(50, 20);
 	DrawLib::printPoligono(poli1, true);
 
 	int win;
