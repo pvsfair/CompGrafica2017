@@ -13,6 +13,8 @@ FrameBuffer * FrameBuffer::getInstance()
 	if (instance == nullptr) {
 		instance = new FrameBuffer();
 		instance->pixelSize = 8;
+		instance->buttonSelected = "Nenhuma Ferramenta Selecionada";
+		instance->toolSelected = 0;
 	}
 	return instance;
 }

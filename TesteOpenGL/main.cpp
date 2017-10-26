@@ -7,6 +7,40 @@
 
 using namespace std;
 
+void text()
+{
+	string menu = FrameBuffer::getInstance()->buttonSelected;
+	int len;
+	len = menu.size();
+
+	glColor3f(0, 0, 0);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	gluOrtho2D(0, 600, 0, 600);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+
+	glLoadIdentity();
+
+	glRasterPos2i(0, 590);
+
+
+	for (int i = 0; i < len; ++i)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, menu[i]);
+	}
+
+	glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+}
+
 void displayCB(void)		/* function called whenever redisplay needed */
 {
 	glClear(GL_COLOR_BUFFER_BIT);		/* clear the display */
@@ -24,12 +58,31 @@ void displayCB(void)		/* function called whenever redisplay needed */
 			glEnd();
 		}
 	}
+	text();
 	glFlush();				/* Complete any pending operations */
 }
 
 void keyCB(unsigned char key, int x, int y)	/* called on key press */
 {
 	if (key == 'q') exit(0);
+	else if (key == '1') {
+		FrameBuffer::getInstance()->toolSelected = 1;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Linha";
+	}
+	else if (key == '2') {
+		FrameBuffer::getInstance()->toolSelected = 2;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Círculo";
+	}
+	else if (key == '3') {
+		FrameBuffer::getInstance()->toolSelected = 3;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Elipse";
+	}
+	else if (key == '4') {
+		FrameBuffer::getInstance()->toolSelected = 4;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Baldinho";
+	}
+	glutPostRedisplay();
+	//std::cout << key << endl;
 }
 
 //Called when the window is resized
@@ -37,9 +90,16 @@ void handleResize(int w, int h) {
 
 }
 
-void mouseFunc(int button, int state, int x, int y) {
+void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or mouseKeyDown
 	if (state == GLUT_UP) {
-		cout << x << ',' << y << endl;
+		std::cout << button << endl;
+		int pixelSize = FrameBuffer::getInstance()->pixelSize;
+		int xScreen = x / pixelSize;
+		int yScreen = y / pixelSize;
+		std::cout << xScreen << ',' << yScreen << endl;
+
+		FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(0, 0, 255));
+		glutPostRedisplay();
 	}
 }
 
@@ -65,9 +125,7 @@ int main(int argc, char *argv[])
 	DrawLib::printLinha(26, 78, 26, 72);
 	DrawLib::printLinha(74, 78, 74, 72);
 	*/
-	DrawLib::printLinha(0, 9, 3, 3);
 	/*
-	DrawLib::printLinha(0, 10, 31, 12);
 
 	std::vector<std::pair<int, int>> poli1;
 	poli1.emplace_back(0, 50);

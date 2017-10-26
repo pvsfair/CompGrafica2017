@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 struct Color {
 	int r;
@@ -40,5 +41,7 @@ public:
 	int pixelSize;
 	void setPixel(int x, int y, Color color);
 	Color getPixel(int x, int y);
+	std::string buttonSelected;
+	int toolSelected;
 };
 
