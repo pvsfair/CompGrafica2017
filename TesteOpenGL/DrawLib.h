@@ -30,8 +30,8 @@ private:
 	static void printPontoElipse(int xc, int yc, int x, int y);
 
 public:
-	static void printLinha(int x0, int y0, int x1, int y1, Color cor = Color());
-	static void printLinha(std::pair<int, int> p1, std::pair<int, int> p2, Color cor = Color()) {
+	static void printLinha(int x0, int y0, int x1, int y1, Color cor = Color(0, 0, 0));
+	static void printLinha(std::pair<int, int> p1, std::pair<int, int> p2, Color cor = Color(0, 0, 0)) {
 		return printLinha(p1.first, p1.second, p2.first, p2.second, cor);
 	}
 	static void printCirculo(int xc, int yc, int raio, bool fill = false);
@@ -39,9 +39,9 @@ public:
 		return printCirculo(centro.first, centro.second, raio, fill);
 	}
 	static void printElipse(int xc, int yc, int width, int height);
-	static void printPoligono(std::vector<std::pair<int,int>> pontos, bool fill = false);
+	static void printPoligono(std::vector<std::pair<int, int>> pontos, bool fill = false);
 	static void floodFill(int x, int y, Color paintColor);
-	static void floodFill(std::pair<int, int> ponto, Color paintColor){
+	static void floodFill(std::pair<int, int> ponto, Color paintColor) {
 		return floodFill(ponto.first, ponto.second, paintColor);
 	}
 	~DrawLib();

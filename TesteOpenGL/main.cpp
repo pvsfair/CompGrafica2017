@@ -103,7 +103,6 @@ void handleResize(int w, int h) {
 
 void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or mouseKeyDown
 	if (state == GLUT_UP) {
-		std::cout << button << endl;
 		int pixelSize = FrameBuffer::getInstance()->pixelSize;
 		int xScreen = x / pixelSize;
 		int yScreen = y / pixelSize;
@@ -115,7 +114,7 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				click = pair<int, int>(xScreen, yScreen);
 			}
 			else {
-				DrawLib::printLinha(click, pair<int, int>(xScreen, yScreen));
+				DrawLib::printLinha(click, pair<int, int>(xScreen, yScreen), Color(0, 0, 0));
 				click = pair<int, int>(-1, -1);
 			}
 			break;
@@ -124,14 +123,21 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				click = pair<int, int>(xScreen, yScreen);
 			}
 			else {
-				std::cout << "test";
 				int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
-				std::cout << raio;
 				DrawLib::printCirculo(click, raio);
 				click = pair<int, int>(-1, -1);
 			}
 			break;
 		case 3:
+			if (click.first < 0) {
+				click = pair<int, int>(xScreen, yScreen);
+			}
+			else {
+				int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
+				int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
+				DrawLib::printElipse(click.first, yScreen, w, h);
+				click = pair<int, int>(-1, -1);
+			}
 			break;
 		case 4:
 			DrawLib::floodFill(xScreen, yScreen, Color(0, 0, 255));
@@ -144,6 +150,13 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 		}
 		glutPostRedisplay();
 	}
+}
+
+void motionFunc(int x, int y) {
+	int pixelSize = FrameBuffer::getInstance()->pixelSize;
+	int xScreen = x / pixelSize;
+	int yScreen = y / pixelSize;
+	std::cout << xScreen << ',' << yScreen << endl;	
 }
 
 int main(int argc, char *argv[])
@@ -203,6 +216,7 @@ int main(int argc, char *argv[])
 	glutKeyboardFunc(keyCB);		/* set window's key callback */
 	
 	glutMouseFunc(mouseFunc);
+	glutMotionFunc(motionFunc);
 
 	glutReshapeFunc(handleResize);
 
