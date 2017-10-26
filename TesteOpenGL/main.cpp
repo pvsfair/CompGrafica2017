@@ -171,17 +171,21 @@ int main(int argc, char *argv[])
 	*/
 	/*
 
+	*/
 	std::vector<std::pair<int, int>> poli1;
-	poli1.emplace_back(0, 50);
+	/*poli1.emplace_back(0, 50);
 	poli1.emplace_back(20, 90);
 	poli1.emplace_back(50, 30);
 	poli1.emplace_back(80, 90);
 	poli1.emplace_back(100, 50);
 	poli1.emplace_back(80, 10);
 	poli1.emplace_back(50, 70);
-	poli1.emplace_back(20, 10);
+	poli1.emplace_back(20, 10);*/
+	poli1.emplace_back(20, 20);
+	poli1.emplace_back(20, 50);
+	poli1.emplace_back(50, 50);
+	poli1.emplace_back(50, 20);
 	DrawLib::printPoligono(poli1, true);
-	*/
 
 	int win;
 

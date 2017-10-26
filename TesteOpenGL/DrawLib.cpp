@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void DrawLib::printLinha(int x0, int y0, int x1, int y1)
+void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor)
 {
 	bool trocas[] = { false, false, false };
 	DrawLib::reflexao(&x0, &y0, &x1, &y1, trocas);
@@ -15,7 +15,7 @@ void DrawLib::printLinha(int x0, int y0, int x1, int y1)
 	int y = y0;
 
 	float e = m - 0.5f;
-	printPontoLinha(x, y, trocas);
+	printPontoLinha(x, y, trocas, cor);
 	for (int i = x + 1; i <= x1; i++) {
 		if (e >= 0) {
 			y++;
@@ -23,7 +23,7 @@ void DrawLib::printLinha(int x0, int y0, int x1, int y1)
 		}
 		x++;
 		e += m;
-		printPontoLinha(x, y, trocas);
+		printPontoLinha(x, y, trocas, cor);
 	}
 }
 
@@ -113,7 +113,7 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 		else
 			proxPonto = pontos[i + 1];
 
-		DrawLib::printLinha(ponto, proxPonto);
+		DrawLib::printLinha(ponto, proxPonto, Color(255, 0, 0));
 		if (fill) {
 			pft.emplace_back(ponto.first, ponto.second, proxPonto.first, proxPonto.second);
 		}
@@ -133,7 +133,9 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 
 			std::sort(pointsX.begin(), pointsX.end());
 			for (size_t i = 0; i < pointsX.size(); i += 2) {
-				DrawLib::printLinha(pointsX[i], y, pointsX[i + 1], y);
+				cout << y << endl;
+				cout << pointsX[i] << ',' << pointsX[i + 1] << endl;
+				DrawLib::printLinha(pointsX[i] + 1, y, pointsX[i + 1] - 1, y, Color(0, 0, 255));
 			}
 		}
 	}
@@ -198,7 +200,7 @@ void DrawLib::reflexao(int *x0, int *y0, int *x1, int *y1, bool trocas[])
 	}
 }
 
-void DrawLib::printPontoLinha(int x, int y, bool trocas[])
+void DrawLib::printPontoLinha(int x, int y, bool trocas[], Color cor)
 {
 	if (trocas[0]) {
 		y = -y;
@@ -211,7 +213,7 @@ void DrawLib::printPontoLinha(int x, int y, bool trocas[])
 		x = y;
 		y = aux;
 	}
-	FrameBuffer::getInstance()->setPixel(x, y, Color(0, 0, 0));
+	FrameBuffer::getInstance()->setPixel(x, y, cor);
 }
 
 void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, bool fill)

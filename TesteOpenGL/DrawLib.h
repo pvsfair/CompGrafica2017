@@ -25,14 +25,14 @@ class DrawLib
 {
 private:
 	static void reflexao(int *x0, int *y0, int *x1, int *y1, bool trocas[]);
-	static void printPontoLinha(int x, int y, bool trocas[]);
+	static void printPontoLinha(int x, int y, bool trocas[], Color cor);
 	static void printPontocirculo(int xc, int yc, int x0, int y0, bool fill = false);
 	static void printPontoElipse(int xc, int yc, int x, int y);
 
 public:
-	static void printLinha(int x0, int y0, int x1, int y1);
-	static void printLinha(std::pair<int, int> p1, std::pair<int, int> p2) {
-		return printLinha(p1.first, p1.second, p2.first, p2.second);
+	static void printLinha(int x0, int y0, int x1, int y1, Color cor = Color());
+	static void printLinha(std::pair<int, int> p1, std::pair<int, int> p2, Color cor = Color()) {
+		return printLinha(p1.first, p1.second, p2.first, p2.second, cor);
 	}
 	static void printCirculo(int xc, int yc, int raio, bool fill = false);
 	static void printCirculo(std::pair<int, int> centro, int raio, bool fill = false) {
