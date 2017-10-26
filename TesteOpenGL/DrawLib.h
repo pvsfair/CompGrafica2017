@@ -35,6 +35,9 @@ public:
 		return printLinha(p1.first, p1.second, p2.first, p2.second);
 	}
 	static void printCirculo(int xc, int yc, int raio, bool fill = false);
+	static void printCirculo(std::pair<int, int> centro, int raio, bool fill = false) {
+		return printCirculo(centro.first, centro.second, raio, fill);
+	}
 	static void printElipse(int xc, int yc, int width, int height);
 	static void printPoligono(std::vector<std::pair<int,int>> pontos, bool fill = false);
 	static void floodFill(int x, int y, Color paintColor);

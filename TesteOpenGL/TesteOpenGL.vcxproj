@@ -118,10 +118,12 @@
     <ClCompile Include="DrawLib.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DrawLib.h" />
     <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

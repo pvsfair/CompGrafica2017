@@ -25,7 +25,9 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::setPixel(int x, int y, Color color)
 {
-	this->fb[x * nCol + y] = color;
+	if (x >= 0 && y >= 0 && x < this->nCol && y < this->nLinhas) {
+		this->fb[x * nCol + y] = color;
+	}
 }
 
 Color FrameBuffer::getPixel(int x, int y)

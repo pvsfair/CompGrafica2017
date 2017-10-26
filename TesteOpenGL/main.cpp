@@ -4,6 +4,7 @@
 #include "Dependencies\freeglut\glut.h"
 #include "FrameBuffer.h"
 #include "DrawLib.h"
+#include "Math.h"
 
 using namespace std;
 
@@ -62,24 +63,33 @@ void displayCB(void)		/* function called whenever redisplay needed */
 	glFlush();				/* Complete any pending operations */
 }
 
+pair<int, int> click = pair<int, int>(-1, -1);
+
 void keyCB(unsigned char key, int x, int y)	/* called on key press */
 {
 	if (key == 'q') exit(0);
 	else if (key == '1') {
 		FrameBuffer::getInstance()->toolSelected = 1;
+		click = pair<int, int>(-1, -1);
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Linha";
 	}
 	else if (key == '2') {
 		FrameBuffer::getInstance()->toolSelected = 2;
+		click = pair<int, int>(-1, -1);
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Círculo";
 	}
 	else if (key == '3') {
 		FrameBuffer::getInstance()->toolSelected = 3;
+		click = pair<int, int>(-1, -1);
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Elipse";
 	}
 	else if (key == '4') {
 		FrameBuffer::getInstance()->toolSelected = 4;
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Baldinho";
+	}
+	else if (key == '5') {
+		FrameBuffer::getInstance()->toolSelected = 5;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Pintar Ponto";
 	}
 	glutPostRedisplay();
 	//std::cout << key << endl;
@@ -90,6 +100,7 @@ void handleResize(int w, int h) {
 
 }
 
+
 void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or mouseKeyDown
 	if (state == GLUT_UP) {
 		std::cout << button << endl;
@@ -97,8 +108,40 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 		int xScreen = x / pixelSize;
 		int yScreen = y / pixelSize;
 		std::cout << xScreen << ',' << yScreen << endl;
-
-		FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(0, 0, 255));
+		switch (FrameBuffer::getInstance()->toolSelected)
+		{
+		case 1:
+			if (click.first < 0) {
+				click = pair<int, int>(xScreen, yScreen);
+			}
+			else {
+				DrawLib::printLinha(click, pair<int, int>(xScreen, yScreen));
+				click = pair<int, int>(-1, -1);
+			}
+			break;
+		case 2:
+			if (click.first < 0) {
+				click = pair<int, int>(xScreen, yScreen);
+			}
+			else {
+				std::cout << "test";
+				int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
+				std::cout << raio;
+				DrawLib::printCirculo(click, raio);
+				click = pair<int, int>(-1, -1);
+			}
+			break;
+		case 3:
+			break;
+		case 4:
+			DrawLib::floodFill(xScreen, yScreen, Color(0, 0, 255));
+			break;
+		case 5:
+			FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(100, 15, 100));
+			break;
+		default:
+			break;
+		}
 		glutPostRedisplay();
 	}
 }
@@ -106,7 +149,8 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 int main(int argc, char *argv[])
 {
 	FrameBuffer *fb = FrameBuffer::getInstance();
-	/*fb->setPixel(3, 4, Color(255, 10, 40));
+	/*
+	fb->setPixel(3, 4, Color(255, 10, 40));
 	DrawLib::printCirculo(50, 50, 47);
 	DrawLib::printCirculo(30, 30, 12);
 	DrawLib::printCirculo(70, 30, 12);

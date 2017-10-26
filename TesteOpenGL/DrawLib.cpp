@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <list>
+#include <Windows.h>
 
 using namespace std;
 
@@ -151,14 +152,16 @@ void DrawLib::floodFill(int x, int y, Color paintColor)
 		currentPos = Q.front();
 		x = currentPos.first;
 		y = currentPos.second;
-		current = fb->getPixel(currentPos.first, currentPos.second);	
+		if (x >= 0 && y >= 0 && x < fb->nCol && y < fb->nLinhas) {
+			current = fb->getPixel(currentPos.first, currentPos.second);
 
-		if (current == bg && current != paintColor) {
-			fb->setPixel(x, y, paintColor);
-			Q.emplace_back(x + 1, y);
-			Q.emplace_back(x, y + 1);
-			Q.emplace_back(x - 1, y);
-			Q.emplace_back(x, y - 1);
+			if (current == bg && current != paintColor) {
+				fb->setPixel(x, y, paintColor);
+				Q.emplace_back(x + 1, y);
+				Q.emplace_back(x, y + 1);
+				Q.emplace_back(x - 1, y);
+				Q.emplace_back(x, y - 1);
+			}
 		}
 		Q.pop_front();
 	}
