@@ -3,7 +3,9 @@
 
 FrameBuffer::FrameBuffer()
 {
-	fb = new Color[nLinhas * nCol];
+	fb = std::vector<Color>(nLinhas * nCol, Color());
+	fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1,-1,-1));
+	hasTempBuffer = false;
 }
 
 FrameBuffer* FrameBuffer::instance = nullptr;
@@ -33,4 +35,16 @@ void FrameBuffer::setPixel(int x, int y, Color color)
 Color FrameBuffer::getPixel(int x, int y)
 {
 	return this->fb[x * nCol + y];
+}
+
+void FrameBuffer::setTempPixel(int x, int y, Color color)
+{
+	if (x >= 0 && y >= 0 && x < this->nCol && y < this->nLinhas) {
+		this->fbTemp[x * nCol + y] = color;
+	}
+}
+
+Color FrameBuffer::getTempPixel(int x, int y)
+{
+	return this->fbTemp[x * nCol + y];
 }

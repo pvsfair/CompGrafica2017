@@ -46,9 +46,16 @@ void displayCB(void)		/* function called whenever redisplay needed */
 {
 	glClear(GL_COLOR_BUFFER_BIT);		/* clear the display */
 	FrameBuffer *fb = FrameBuffer::getInstance();
+	Color c;
 	for (int i = 0; i < FrameBuffer::nLinhas; i++) {
 		for (int j = 0; j < FrameBuffer::nCol; j++) {
-			Color c = fb->getPixel(i, j);
+			if (fb->isTempBuffer() && fb->getTempPixel(i, j) != Color(-1, -1, -1)) {
+				c = fb->getTempPixel(i, j);
+				cout << "pintando com temp" << endl;
+			}
+			else {
+				c = fb->getPixel(i, j);
+			}
 			glColor3ub(c.r, c.g, c.b);
 
 			glBegin(GL_QUADS);
@@ -100,9 +107,22 @@ void handleResize(int w, int h) {
 
 }
 
+FrameBuffer *temp = nullptr;
 
 void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or mouseKeyDown
-	if (state == GLUT_UP) {
+	if (state == GLUT_DOWN) {
+		int pixelSize = FrameBuffer::getInstance()->pixelSize;
+		int xScreen = x / pixelSize;
+		int yScreen = y / pixelSize;
+		click = pair<int, int>(xScreen, yScreen);
+		temp = FrameBuffer::getInstance();
+	}
+	else if (state == GLUT_UP) {
+		temp = nullptr;
+		click = pair<int, int>(-1, -1);
+		FrameBuffer::getInstance()->copyTempToFinalBuffer();
+	}
+	/*if (state == GLUT_UP) {
 		int pixelSize = FrameBuffer::getInstance()->pixelSize;
 		int xScreen = x / pixelSize;
 		int yScreen = y / pixelSize;
@@ -149,14 +169,21 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 			break;
 		}
 		glutPostRedisplay();
-	}
+	}*/
 }
 
 void motionFunc(int x, int y) {
 	int pixelSize = FrameBuffer::getInstance()->pixelSize;
 	int xScreen = x / pixelSize;
 	int yScreen = y / pixelSize;
-	std::cout << xScreen << ',' << yScreen << endl;	
+	pair<int, int> ponto = pair<int, int>(xScreen, yScreen);
+	if (click.first >= 0) {
+		std::cout << xScreen << ',' << yScreen << endl;	
+
+		DrawLib::printLinha(click, ponto, Color(23, 42, 148), true);
+
+		glutPostRedisplay();
+	}
 }
 
 int main(int argc, char *argv[])

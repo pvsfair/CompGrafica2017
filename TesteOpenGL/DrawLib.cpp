@@ -6,16 +6,19 @@
 
 using namespace std;
 
-void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor)
+void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor, bool isTemp)
 {
+
 	bool trocas[] = { false, false, false };
 	DrawLib::reflexao(&x0, &y0, &x1, &y1, trocas);
 	float m = (float)(y1 - y0) / (x1 - x0);
 	int x = x0;
 	int y = y0;
-
+	if (isTemp) {
+		FrameBuffer::getInstance()->clearTempBuffer();
+	}
 	float e = m - 0.5f;
-	printPontoLinha(x, y, trocas, cor);
+	printPontoLinha(x, y, trocas, cor, isTemp);
 	for (int i = x + 1; i <= x1; i++) {
 		if (e >= 0) {
 			y++;
@@ -23,7 +26,7 @@ void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor)
 		}
 		x++;
 		e += m;
-		printPontoLinha(x, y, trocas, cor);
+		printPontoLinha(x, y, trocas, cor, isTemp);
 	}
 }
 
@@ -200,7 +203,7 @@ void DrawLib::reflexao(int *x0, int *y0, int *x1, int *y1, bool trocas[])
 	}
 }
 
-void DrawLib::printPontoLinha(int x, int y, bool trocas[], Color cor)
+void DrawLib::printPontoLinha(int x, int y, bool trocas[], Color cor, bool isTemp)
 {
 	if (trocas[0]) {
 		y = -y;
@@ -213,7 +216,10 @@ void DrawLib::printPontoLinha(int x, int y, bool trocas[], Color cor)
 		x = y;
 		y = aux;
 	}
-	FrameBuffer::getInstance()->setPixel(x, y, cor);
+	if (isTemp)
+		FrameBuffer::getInstance()->setTempPixel(x, y, cor);
+	else
+		FrameBuffer::getInstance()->setPixel(x, y, cor);
 }
 
 void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, bool fill)

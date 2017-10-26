@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector> 
 
 struct Color {
 	int r;
@@ -36,7 +37,9 @@ class FrameBuffer
 private:
 	static FrameBuffer* instance;
 	FrameBuffer();
-	Color *fb;
+	std::vector<Color> fb;
+	std::vector<Color> fbTemp;
+	bool hasTempBuffer;
 
 
 public:
@@ -47,6 +50,30 @@ public:
 	int pixelSize;
 	void setPixel(int x, int y, Color color);
 	Color getPixel(int x, int y);
+
+	void setTempPixel(int x, int y, Color color);
+	Color getTempPixel(int x, int y);
+	bool isTempBuffer() {
+		return hasTempBuffer;
+	}
+
+	inline void clearTempBuffer() {
+		fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
+		this->hasTempBuffer = true;
+	}
+
+	inline void copyTempToFinalBuffer() {
+		for (size_t i = 0; i < fb.size(); i++) {
+			if (fbTemp[i] != Color(-1, -1, -1)) {
+				fb[i] = fbTemp[i];
+				fbTemp[i] = Color(-1, -1, -1);
+			}
+		}
+		hasTempBuffer = false;
+	}
+
+
+
 	std::string buttonSelected;
 	int toolSelected;
 };
