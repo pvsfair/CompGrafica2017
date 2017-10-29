@@ -235,12 +235,14 @@ int main(int argc, char *argv[])
 	poli1.emplace_back(50, 50);
 	DrawLib::printPoligono(poli1, true);
 
-	int win;
+	int win, win2;
 
 	glutInit(&argc, argv);		/* initialize GLUT system */
 
 	glutInitDisplayMode(GLUT_RGB);
+	glutInitWindowPosition(10, 10);
 	glutInitWindowSize(1000, 1000);		/* width=400pixels height=500pixels */
+
 	win = glutCreateWindow("Triangle");	/* create window */
 
 										/* from this point on the current window is win */
@@ -249,11 +251,12 @@ int main(int argc, char *argv[])
 	gluOrtho2D(0, 1000, 1000, 0);		/* how object is mapped to window */
 	glutDisplayFunc(displayCB);		/* set window's display callback */
 	glutKeyboardFunc(keyCB);		/* set window's key callback */
-	
+
 	glutMouseFunc(mouseFunc);
 	glutMotionFunc(motionFunc);
 
 	glutReshapeFunc(handleResize);
+
 
 	glutMainLoop();			/* start processing events... */
 
