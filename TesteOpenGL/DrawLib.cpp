@@ -146,10 +146,42 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 
 void DrawLib::floodFill(int x, int y, Color paintColor)
 {
+	cout << "baldinho em: " << x << ',' << y << endl;
 	FrameBuffer *fb = FrameBuffer::getInstance();
 	Color bg = fb->getPixel(x, y);
 	std::list<std::pair<int, int>> Q;
+	if (bg == paintColor)return;
+	int x1;
+	bool spanAbove, spanBelow;
 	Q.emplace_back(x, y);
+	while (Q.size() > 0) {
+		x = Q.front().first;
+		y = Q.front().second;
+		x1 = x;
+		while (x1 >= 0 && fb->getPixel(x1, y) == bg) x1--;
+		x1++;
+		spanAbove = spanBelow = 0;
+		while (x1 < fb->nCol && fb->getPixel(x1, y) == bg) {
+			fb->setPixel(x1, y, paintColor);
+			if (!spanAbove && y > 0 && fb->getPixel(x1, y - 1) == bg) {
+				Q.emplace_back(x1, y - 1);
+				spanAbove = 1;
+			}
+			else if (spanAbove && y > 0 && fb->getPixel(x1, y - 1) == bg) {
+				spanAbove = 0;
+			}
+			if (!spanBelow && y < fb->nLinhas - 1 && fb->getPixel(x1, y + 1) == bg) {
+				Q.emplace_back(x1, y + 1);
+				spanBelow = 1;
+			}
+			else if (spanBelow && y < fb->nLinhas - 1 && fb->getPixel(x1, y + 1) == bg) {
+				spanBelow = 0;
+			}
+			x1++;
+		}
+		Q.pop_front();
+	}
+	/*
 
 	Color current;
 	pair<int, int> currentPos;
@@ -170,6 +202,7 @@ void DrawLib::floodFill(int x, int y, Color paintColor)
 		}
 		Q.pop_front();
 	}
+	*/
 }
 
 void DrawLib::reflexao(int *x0, int *y0, int *x1, int *y1, bool trocas[])
