@@ -136,8 +136,8 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 
 			std::sort(pointsX.begin(), pointsX.end());
 			for (size_t i = 0; i < pointsX.size(); i += 2) {
-				cout << y << endl;
-				cout << pointsX[i] << ',' << pointsX[i + 1] << endl;
+				//cout << y << endl;
+				//cout << pointsX[i] << ',' << pointsX[i + 1] << endl;
 				DrawLib::printLinha(pointsX[i] + 1, y, pointsX[i + 1] - 1, y, Color(0, 0, 255));
 			}
 		}
@@ -146,7 +146,7 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 
 void DrawLib::floodFill(int x, int y, Color paintColor)
 {
-	cout << "baldinho em: " << x << ',' << y << endl;
+	//cout << "baldinho em: " << x << ',' << y << endl;
 	FrameBuffer *fb = FrameBuffer::getInstance();
 	Color bg = fb->getPixel(x, y);
 	std::list<std::pair<int, int>> Q;

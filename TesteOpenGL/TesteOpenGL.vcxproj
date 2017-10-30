@@ -115,12 +115,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="DrawLib.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="DrawLib.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Math.h" />
