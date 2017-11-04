@@ -9,6 +9,10 @@
 
 using namespace std;
 
+void update(int a) {
+	glutPostRedisplay();
+}
+
 void text()
 {
 	string menu = FrameBuffer::getInstance()->buttonSelected;
@@ -104,6 +108,7 @@ void displayCB(void)		/* function called whenever redisplay needed */
 	drawColorPicker();
 	text();
 	glFlush();				/* Complete any pending operations */
+	glutTimerFunc(35, update, 0);
 }
 
 pair<int, int> click = pair<int, int>(-1, -1);
@@ -134,7 +139,7 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 		FrameBuffer::getInstance()->toolSelected = 5;
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Pintar Ponto";
 	}
-	glutPostRedisplay();
+	//glutPostRedisplay();
 	//std::cout << key << endl;
 }
 
@@ -161,20 +166,22 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 			if (state == GLUT_DOWN) {
 				cp = ColorPicker::getInstance();
 				if (y >= 0 && y < 300) {
-					cp->setSV(1 - y / 300.0f, (x - 1000) / 300.0f);
+					cp->setHV((x - 1000)*1.2f, 1 - y / 300.0f);
 				}
 				else if (y >= 300 && y < 330) {
-					cp->setH((x - 1000) * 1.2f);
+					cp->setS((x - 1000) / 300.0f);
 				}
 			}
 		}
 	}
 	else {
-		if (FrameBuffer::getInstance()->toolSelected == 1) {
+		int pixelSize = FrameBuffer::getInstance()->pixelSize;
+		int xScreen = x / pixelSize;
+		int yScreen = y / pixelSize;
+		switch (FrameBuffer::getInstance()->toolSelected)
+		{
+		case 1:
 			if (state == GLUT_DOWN) {
-				int pixelSize = FrameBuffer::getInstance()->pixelSize;
-				int xScreen = x / pixelSize;
-				int yScreen = y / pixelSize;
 				click = pair<int, int>(xScreen, yScreen);
 				temp = FrameBuffer::getInstance();
 			}
@@ -183,34 +190,34 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				click = pair<int, int>(-1, -1);
 				FrameBuffer::getInstance()->copyTempToFinalBuffer();
 			}
-		}
-		else {
+			break;
+		case 2:
+			if (state == GLUT_DOWN) {
+				click = pair<int, int>(xScreen, yScreen);
+				temp = FrameBuffer::getInstance();
+			}
+			else if (state == GLUT_UP) {
+				temp = nullptr;
+				click = pair<int, int>(-1, -1);
+				FrameBuffer::getInstance()->copyTempToFinalBuffer();
+			}
+			break;
+		//case 3:
+		//	if (state == GLUT_DOWN) {
+		//		click = pair<int, int>(xScreen, yScreen);
+		//		temp = FrameBuffer::getInstance();
+		//	}
+		//	else if (state == GLUT_UP) {
+		//		temp = nullptr;
+		//		click = pair<int, int>(-1, -1);
+		//		FrameBuffer::getInstance()->copyTempToFinalBuffer();
+		//	}
+		//	break;
+		default:
 			if (state == GLUT_UP) {
-				int pixelSize = FrameBuffer::getInstance()->pixelSize;
-				int xScreen = x / pixelSize;
-				int yScreen = y / pixelSize;
 				//std::cout << xScreen << ',' << yScreen << endl;
 				switch (FrameBuffer::getInstance()->toolSelected)
 				{
-				case 1:
-					if (click.first < 0) {
-						click = pair<int, int>(xScreen, yScreen);
-					}
-					else {
-						DrawLib::printLinha(click, pair<int, int>(xScreen, yScreen), Color(0, 0, 0));
-						click = pair<int, int>(-1, -1);
-					}
-					break;
-				case 2:
-					if (click.first < 0) {
-						click = pair<int, int>(xScreen, yScreen);
-					}
-					else {
-						int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
-						DrawLib::printCirculo(click, raio);
-						click = pair<int, int>(-1, -1);
-					}
-					break;
 				case 3:
 					if (click.first < 0) {
 						click = pair<int, int>(xScreen, yScreen);
@@ -234,32 +241,48 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 			}
 		}
 	}
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 void motionFunc(int x, int y) {
-	if (FrameBuffer::getInstance()->toolSelected == 1) {
-		int pixelSize = FrameBuffer::getInstance()->pixelSize;
-		int xScreen = x / pixelSize;
-		int yScreen = y / pixelSize;
-		pair<int, int> ponto = pair<int, int>(xScreen, yScreen);
+	int pixelSize = FrameBuffer::getInstance()->pixelSize;
+	int xScreen = x / pixelSize;
+	int yScreen = y / pixelSize;
+	pair<int, int> ponto = pair<int, int>(xScreen, yScreen);
+
+	switch (FrameBuffer::getInstance()->toolSelected) {
+	case 1:
 		if (click.first >= 0) {
 			//std::cout << xScreen << ',' << yScreen << endl;
-
 			DrawLib::printLinha(click, ponto, ColorPicker::brushColor(), true);
 
 		}
+		break;
+	case 2:
+		if (click.first >= 0) {
+			int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
+
+			DrawLib::printCirculo(click, raio,false, true);
+		}
+		break;
+	//case 3:
+	//	if (click.first >= 0) {
+	//		int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
+	//		int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
+	//		DrawLib::printElipse(click.first, yScreen, w, h,true);
+	//	}
+	//	break;
 	}
 	if (cp != nullptr) {
 		cp = ColorPicker::getInstance();
 		if (y >= 0 && y < 300) {
-			cp->setSV(1 - y / 300.0f, (x - 1000) / 300.0f);
+			cp->setHV((x - 1000)*1.2f, 1 - y / 300.0f);
 		}
 		else if (y >= 300 && y < 330) {
-			cp->setH((x - 1000) * 1.2f);
+			cp->setS((x - 1000) / 300.0f);
 		}
 	}
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 int main(int argc, char *argv[])
@@ -289,17 +312,17 @@ int main(int argc, char *argv[])
 
 	*/
 	std::vector<std::pair<int, int>> poli1;
-	/*poli1.emplace_back(0, 50);
+	poli1.emplace_back(0, 50);
 	poli1.emplace_back(20, 90);
 	poli1.emplace_back(50, 30);
 	poli1.emplace_back(80, 90);
 	poli1.emplace_back(100, 50);
 	poli1.emplace_back(80, 10);
 	poli1.emplace_back(50, 70);
-	poli1.emplace_back(20, 10);*/
-	poli1.emplace_back(20, 20);
+	poli1.emplace_back(20, 10);
+	/*poli1.emplace_back(20, 20);
 	poli1.emplace_back(20, 50);
-	poli1.emplace_back(50, 50);
+	poli1.emplace_back(50, 50);*/
 	DrawLib::printPoligono(poli1, true);
 
 	int win;
@@ -323,8 +346,6 @@ int main(int argc, char *argv[])
 	glutMotionFunc(motionFunc);
 
 	glutReshapeFunc(handleResize);
-
-
 	glutMainLoop();			/* start processing events... */
 
 							/* execution never reaches this point */

@@ -28,13 +28,13 @@ FrameBuffer::~FrameBuffer()
 void FrameBuffer::setPixel(int x, int y, Color color)
 {
 	if (x >= 0 && y >= 0 && x < this->nCol && y < this->nLinhas) {
-		this->fb[x * nCol + y] = color;
+		this->fb[y * nCol + x] = color;
 	}
 }
 
 Color FrameBuffer::getPixel(int x, int y)
 {
-	return this->fb[x * nCol + y];
+	return this->fb[y * nCol + x];
 }
 
 void FrameBuffer::setTempPixel(int x, int y, Color color)

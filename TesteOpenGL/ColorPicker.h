@@ -17,6 +17,22 @@ private:
 
 public:
 	static ColorPicker *getInstance();
+	void setHV(int h, float v) {
+		this->H = h;
+		this->V = v;
+		this->colorSelected = ColorHSV(this->H, this->V, this->S);
+		for (int i = 0; i < 300; i++) {
+			ColorHSV color(H, 1, (float)i / 300.0f);
+			for (int j = 300; j < 330; j++) {
+				this->setPixel(i, j, color);
+			}
+		}
+		
+	}
+	void setS(float s) {
+		this->S = s;
+		this->colorSelected = ColorHSV(this->H, this->V, this->S);
+	}
 	void setH(int h) {
 		this->H = h;
 		this->colorSelected = ColorHSV(this->H, this->V, this->S);
