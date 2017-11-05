@@ -139,6 +139,10 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 		FrameBuffer::getInstance()->toolSelected = 5;
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Pintar Ponto";
 	}
+	else if (key == '6') {
+		FrameBuffer::getInstance()->toolSelected = 6;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Polígono";
+	}
 	//glutPostRedisplay();
 	//std::cout << key << endl;
 }
@@ -180,7 +184,7 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 		int yScreen = y / pixelSize;
 		switch (FrameBuffer::getInstance()->toolSelected)
 		{
-		case 1:
+		case 1:// Linha
 			if (state == GLUT_DOWN) {
 				click = pair<int, int>(xScreen, yScreen);
 				temp = FrameBuffer::getInstance();
@@ -191,7 +195,7 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				FrameBuffer::getInstance()->copyTempToFinalBuffer();
 			}
 			break;
-		case 2:
+		case 2:// Círculo
 			if (state == GLUT_DOWN) {
 				click = pair<int, int>(xScreen, yScreen);
 				temp = FrameBuffer::getInstance();
@@ -202,38 +206,29 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				FrameBuffer::getInstance()->copyTempToFinalBuffer();
 			}
 			break;
-		//case 3:
-		//	if (state == GLUT_DOWN) {
-		//		click = pair<int, int>(xScreen, yScreen);
-		//		temp = FrameBuffer::getInstance();
-		//	}
-		//	else if (state == GLUT_UP) {
-		//		temp = nullptr;
-		//		click = pair<int, int>(-1, -1);
-		//		FrameBuffer::getInstance()->copyTempToFinalBuffer();
-		//	}
-		//	break;
+		case 3:// Elipse
+			if (state == GLUT_DOWN) {
+				click = pair<int, int>(xScreen, yScreen);
+				temp = FrameBuffer::getInstance();
+			}
+			else if (state == GLUT_UP) {
+				temp = nullptr;
+				click = pair<int, int>(-1, -1);
+				FrameBuffer::getInstance()->copyTempToFinalBuffer();
+			}
+			break;
 		default:
 			if (state == GLUT_UP) {
 				//std::cout << xScreen << ',' << yScreen << endl;
 				switch (FrameBuffer::getInstance()->toolSelected)
 				{
-				case 3:
-					if (click.first < 0) {
-						click = pair<int, int>(xScreen, yScreen);
-					}
-					else {
-						int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
-						int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
-						DrawLib::printElipse(click.first, yScreen, w, h);
-						click = pair<int, int>(-1, -1);
-					}
-					break;
-				case 4:
+				case 4:// Baldinho
 					DrawLib::floodFill(xScreen, yScreen, ColorPicker::brushColor());
 					break;
-				case 5:
+				case 5:// Pinta Pixel
 					FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(100, 15, 100));
+					break;
+				case 6:
 					break;
 				default:
 					break;
@@ -251,27 +246,27 @@ void motionFunc(int x, int y) {
 	pair<int, int> ponto = pair<int, int>(xScreen, yScreen);
 
 	switch (FrameBuffer::getInstance()->toolSelected) {
-	case 1:
+	case 1:// Linha
 		if (click.first >= 0) {
 			//std::cout << xScreen << ',' << yScreen << endl;
 			DrawLib::printLinha(click, ponto, ColorPicker::brushColor(), true);
 
 		}
 		break;
-	case 2:
+	case 2:// Círculo
 		if (click.first >= 0) {
 			int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
 
-			DrawLib::printCirculo(click, raio,false, true);
+			DrawLib::printCirculo(click, raio, ColorPicker::brushColor(), false, true);
 		}
 		break;
-	//case 3:
-	//	if (click.first >= 0) {
-	//		int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
-	//		int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
-	//		DrawLib::printElipse(click.first, yScreen, w, h,true);
-	//	}
-	//	break;
+	case 3:// Elipse
+		if (click.first >= 0) {
+			int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
+			int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
+			DrawLib::printElipse(click.first, yScreen, w, h, ColorPicker::brushColor(), true);
+		}
+		break;
 	}
 	if (cp != nullptr) {
 		cp = ColorPicker::getInstance();

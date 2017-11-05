@@ -30,14 +30,14 @@ void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor, bool isTemp)
 	}
 }
 
-void DrawLib::printCirculo(int xc, int yc, int raio, bool fill, bool isTemp)
+void DrawLib::printCirculo(int xc, int yc, int raio, Color cor, bool fill, bool isTemp)
 {
 	if (isTemp) FrameBuffer::getInstance()->clearTempBuffer();
 	int x = 0;
 	int y = raio;
 	int p = 1 - raio;
 
-	printPontocirculo(xc, yc, x, y, fill, isTemp);
+	printPontocirculo(xc, yc, x, y, cor, fill, isTemp);
 	while (x < y) {
 		x++;
 		if (p < 0) {
@@ -47,11 +47,11 @@ void DrawLib::printCirculo(int xc, int yc, int raio, bool fill, bool isTemp)
 			y--;
 			p += 2 * x - 2 * y + 5;
 		}
-		printPontocirculo(xc, yc, x, y, fill, isTemp);
+		printPontocirculo(xc, yc, x, y, cor, fill, isTemp);
 	}
 }
 
-void DrawLib::printElipse(int xc, int yc, int width, int height, bool isTemp)
+void DrawLib::printElipse(int xc, int yc, int width, int height, Color cor, bool isTemp)
 {
 	if (isTemp) FrameBuffer::getInstance()->clearTempBuffer();
 	int a2 = width * width;
@@ -64,7 +64,7 @@ void DrawLib::printElipse(int xc, int yc, int width, int height, bool isTemp)
 	int sigma = 2 * b2 + a2*(1 - 2 * height);
 
 	while (b2*x <= a2*y) {
-		printPontoElipse(xc, yc, x, y, isTemp);
+		printPontoElipse(xc, yc, x, y, cor, isTemp);
 		if (sigma >= 0) {
 			sigma += fa2*(1 - y);
 			y--;
@@ -77,7 +77,7 @@ void DrawLib::printElipse(int xc, int yc, int width, int height, bool isTemp)
 	sigma = 2 * a2 + b2*(1 - 2 * width);
 
 	while (a2*y <= b2*x) {
-		printPontoElipse(xc, yc, x, y, isTemp);
+		printPontoElipse(xc, yc, x, y, cor, isTemp);
 		if (sigma >= 0) {
 			sigma += fb2*(1 - x);
 			x--;
@@ -268,43 +268,43 @@ void DrawLib::printPontoLinha(int x, int y, bool trocas[], Color cor, bool isTem
 		FrameBuffer::getInstance()->setPixel(x, y, cor);
 }
 
-void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, bool fill, bool isTemp)
+void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, Color cor, bool fill, bool isTemp)
 {
 	if (isTemp) {
 		//octante 1
-		FrameBuffer::getInstance()->setTempPixel(xc + y0, yc + x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc + y0, yc + x0, cor);
 		//octante 2
-		FrameBuffer::getInstance()->setTempPixel(xc + x0, yc + y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc + x0, yc + y0, cor);
 		//octante 3
-		FrameBuffer::getInstance()->setTempPixel(xc - x0, yc + y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc - x0, yc + y0, cor);
 		//octante 4
-		FrameBuffer::getInstance()->setTempPixel(xc - y0, yc + x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc - y0, yc + x0, cor);
 		//octante 5
-		FrameBuffer::getInstance()->setTempPixel(xc - y0, yc - x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc - y0, yc - x0, cor);
 		//octante 6
-		FrameBuffer::getInstance()->setTempPixel(xc - x0, yc - y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc - x0, yc - y0, cor);
 		//octante 7
-		FrameBuffer::getInstance()->setTempPixel(xc + x0, yc - y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc + x0, yc - y0, cor);
 		//octante 8
-		FrameBuffer::getInstance()->setTempPixel(xc + y0, yc - x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc + y0, yc - x0, cor);
 	}
 	else {
 		//octante 1
-		FrameBuffer::getInstance()->setPixel(xc + y0, yc + x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc + y0, yc + x0, cor);
 		//octante 2
-		FrameBuffer::getInstance()->setPixel(xc + x0, yc + y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc + x0, yc + y0, cor);
 		//octante 3
-		FrameBuffer::getInstance()->setPixel(xc - x0, yc + y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc - x0, yc + y0, cor);
 		//octante 4
-		FrameBuffer::getInstance()->setPixel(xc - y0, yc + x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc - y0, yc + x0, cor);
 		//octante 5
-		FrameBuffer::getInstance()->setPixel(xc - y0, yc - x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc - y0, yc - x0, cor);
 		//octante 6
-		FrameBuffer::getInstance()->setPixel(xc - x0, yc - y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc - x0, yc - y0, cor);
 		//octante 7
-		FrameBuffer::getInstance()->setPixel(xc + x0, yc - y0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc + x0, yc - y0, cor);
 		//octante 8
-		FrameBuffer::getInstance()->setPixel(xc + y0, yc - x0, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc + y0, yc - x0, cor);
 	}
 	if (fill) {
 		DrawLib::printLinha(xc + y0 - 1, yc + x0, xc - y0 + 1, yc + x0, Color(0, 0, 0), isTemp);
@@ -314,19 +314,19 @@ void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, bool fill, bool 
 	}
 }
 
-void DrawLib::printPontoElipse(int xc, int yc, int x, int y, bool isTemp)
+void DrawLib::printPontoElipse(int xc, int yc, int x, int y, Color cor, bool isTemp)
 {
 	if (isTemp) {
-		FrameBuffer::getInstance()->setTempPixel(xc + x, yc + y, Color(0, 0, 0));
-		FrameBuffer::getInstance()->setTempPixel(xc - x, yc + y, Color(0, 0, 0));
-		FrameBuffer::getInstance()->setTempPixel(xc + x, yc - y, Color(0, 0, 0));
-		FrameBuffer::getInstance()->setTempPixel(xc - x, yc - y, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setTempPixel(xc + x, yc + y, cor);
+		FrameBuffer::getInstance()->setTempPixel(xc - x, yc + y, cor);
+		FrameBuffer::getInstance()->setTempPixel(xc + x, yc - y, cor);
+		FrameBuffer::getInstance()->setTempPixel(xc - x, yc - y, cor);
 	}
 	else {
-		FrameBuffer::getInstance()->setPixel(xc + x, yc + y, Color(0, 0, 0));
-		FrameBuffer::getInstance()->setPixel(xc - x, yc + y, Color(0, 0, 0));
-		FrameBuffer::getInstance()->setPixel(xc + x, yc - y, Color(0, 0, 0));
-		FrameBuffer::getInstance()->setPixel(xc - x, yc - y, Color(0, 0, 0));
+		FrameBuffer::getInstance()->setPixel(xc + x, yc + y, cor);
+		FrameBuffer::getInstance()->setPixel(xc - x, yc + y, cor);
+		FrameBuffer::getInstance()->setPixel(xc + x, yc - y, cor);
+		FrameBuffer::getInstance()->setPixel(xc - x, yc - y, cor);
 	}
 }
 
