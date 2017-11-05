@@ -112,12 +112,12 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 			if (ponto.second > yMax) {
 				yMax = ponto.second;
 			}
-		}/*
+		}
 		if (i == pontos.size() - 1)
 			proxPonto = pontos[0];
 		else
 			proxPonto = pontos[i + 1];
-		,*/
+		
 		//DrawLib::printLinha(ponto, proxPonto, Color(255, 0, 0));
 		if (fill) {
 			pft.emplace_back(ponto.first, ponto.second, proxPonto.first, proxPonto.second);
