@@ -94,6 +94,10 @@ public:
 		this->hasTempBuffer = true;
 	}
 
+	inline void clearFrameBuffer() {
+		fb = std::vector<Color>(nLinhas * nCol, Color());
+	}
+
 	inline void copyTempToFinalBuffer() {
 		for (size_t i = 0; i < fb.size(); i++) {
 			if (fbTemp[i] != Color(-1, -1, -1)) {
@@ -106,6 +110,7 @@ public:
 
 
 
+	bool fillFigure;
 	std::string buttonSelected;
 	int toolSelected;
 };

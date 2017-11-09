@@ -16,6 +16,7 @@ FrameBuffer * FrameBuffer::getInstance()
 		instance = new FrameBuffer();
 		instance->pixelSize = 8;
 		instance->buttonSelected = "Nenhuma Ferramenta Selecionada";
+		instance->fillFigure = false;
 		instance->toolSelected = 0;
 	}
 	return instance;

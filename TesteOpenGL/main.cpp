@@ -16,6 +16,7 @@ void update(int a) {
 void text()
 {
 	string menu = FrameBuffer::getInstance()->buttonSelected;
+	menu += (FrameBuffer::getInstance()->fillFigure) ? " Com preenchimento" : "";
 	int len;
 	len = menu.size();
 
@@ -141,7 +142,14 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 	}
 	else if (key == '6') {
 		FrameBuffer::getInstance()->toolSelected = 6;
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Polígono";
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Poligono";
+		DrawLib::clearPoligonoDrawing();
+	}
+	else if (key == 'f' || key == 'F') {
+		FrameBuffer::getInstance()->fillFigure = !FrameBuffer::getInstance()->fillFigure;
+	}
+	else if (key == 'c' || key == 'C') {
+		FrameBuffer::getInstance()->clearFrameBuffer();
 	}
 	//glutPostRedisplay();
 	//std::cout << key << endl;
@@ -229,6 +237,7 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 					FrameBuffer::getInstance()->setPixel(xScreen, yScreen, Color(100, 15, 100));
 					break;
 				case 6:
+					DrawLib::printPoligonoPonto(std::pair<int,int>(xScreen, yScreen), ColorPicker::getInstance()->brushColor(), FrameBuffer::getInstance()->fillFigure);
 					break;
 				default:
 					break;
@@ -257,7 +266,7 @@ void motionFunc(int x, int y) {
 		if (click.first >= 0) {
 			int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
 
-			DrawLib::printCirculo(click, raio, ColorPicker::brushColor(), false, true);
+			DrawLib::printCirculo(click, raio, ColorPicker::brushColor(), FrameBuffer::getInstance()->fillFigure, true);
 		}
 		break;
 	case 3:// Elipse
@@ -306,6 +315,7 @@ int main(int argc, char *argv[])
 	/*
 
 	*/
+	/*
 	std::vector<std::pair<int, int>> poli1;
 	poli1.emplace_back(0, 50);
 	poli1.emplace_back(20, 90);
@@ -315,13 +325,15 @@ int main(int argc, char *argv[])
 	poli1.emplace_back(80, 10);
 	poli1.emplace_back(50, 70);
 	poli1.emplace_back(20, 10);
-	/*
 	poli1.emplace_back(20, 20);
 	poli1.emplace_back(20, 50);
 	poli1.emplace_back(50, 50);
 	poli1.emplace_back(50, 20);
-	*/
+	poli1.emplace_back(0, 50);
+	poli1.emplace_back(20, 53);
+	poli1.emplace_back(30, 45);
 	DrawLib::printPoligono(poli1, true);
+	*/
 
 	int win;
 

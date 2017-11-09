@@ -6,15 +6,14 @@
 
 using namespace std;
 
-void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor, bool isTemp)
+void DrawLib::printLinha(int x0, int y0, int x1, int y1, Color cor, bool isTemp, bool innerFunc)
 {
-
 	bool trocas[] = { false, false, false };
 	DrawLib::reflexao(&x0, &y0, &x1, &y1, trocas);
 	float m = (float)(y1 - y0) / (x1 - x0);
 	int x = x0;
 	int y = y0;
-	if (isTemp) {
+	if (isTemp && !innerFunc) {
 		FrameBuffer::getInstance()->clearTempBuffer();
 	}
 	float e = m - 0.5f;
@@ -36,6 +35,7 @@ void DrawLib::printCirculo(int xc, int yc, int raio, Color cor, bool fill, bool 
 	int x = 0;
 	int y = raio;
 	int p = 1 - raio;
+	bool changedY = false;
 
 	printPontocirculo(xc, yc, x, y, cor, fill, isTemp);
 	while (x < y) {
@@ -44,10 +44,11 @@ void DrawLib::printCirculo(int xc, int yc, int raio, Color cor, bool fill, bool 
 			p += 2 * x + 3;
 		}
 		else {
+			changedY = true;
 			y--;
 			p += 2 * x - 2 * y + 5;
 		}
-		printPontocirculo(xc, yc, x, y, cor, fill, isTemp);
+		printPontocirculo(xc, yc, x, y, cor, (fill && changedY), isTemp);
 	}
 }
 
@@ -87,7 +88,7 @@ void DrawLib::printElipse(int xc, int yc, int width, int height, Color cor, bool
 	}
 }
 
-void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
+void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, Color corBorder, bool fill, Color corFill)
 {
 	pair<int, int> ponto = pontos[0];
 	pair<int, int> proxPonto = pontos[0];
@@ -142,7 +143,7 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 				cout << y << endl;
 				cout << pointsX[i] << ',' << endl;
 				cout << pointsX[i + 1] << endl << endl;
-				DrawLib::printLinha(pointsX[i], y, pointsX[i + 1], y, Color(0, 0, 255));
+				DrawLib::printLinha(pointsX[i], y, pointsX[i + 1], y, corFill);
 			}
 		}
 	}
@@ -152,9 +153,33 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, bool fill)
 			proxPonto = pontos[0];
 		else
 			proxPonto = pontos[i + 1];
-		DrawLib::printLinha(ponto, proxPonto, Color(255, 0, 0));
+		DrawLib::printLinha(ponto, proxPonto, corBorder);
 	}
 
+}
+
+std::vector<std::pair<int, int>> *DrawLib::pontosPoligono = new std::vector<std::pair<int, int>>();
+
+
+void DrawLib::printPoligonoPonto(std::pair<int, int> ponto, Color corBorder, bool fill, Color corFill, bool fechar)
+{
+	if (!DrawLib::pontosPoligono->empty() && DrawLib::pontosPoligono->front() == ponto) {
+		fechar = true;
+	}
+
+	if (fechar) {
+		DrawLib::printPoligono(*DrawLib::pontosPoligono, corBorder, fill, corFill);
+		DrawLib::pontosPoligono = new std::vector<std::pair<int, int>>();
+	}
+	else {
+		if (DrawLib::pontosPoligono->empty()) {
+			DrawLib::printPonto(ponto, corBorder);
+		}
+		else {
+			DrawLib::printLinha(DrawLib::pontosPoligono->back(), ponto, corBorder);
+		}
+		DrawLib::pontosPoligono->push_back(ponto);
+	}
 }
 
 void DrawLib::floodFill(int x, int y, Color paintColor)
@@ -271,6 +296,12 @@ void DrawLib::printPontoLinha(int x, int y, bool trocas[], Color cor, bool isTem
 void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, Color cor, bool fill, bool isTemp)
 {
 	if (isTemp) {
+		if (fill) {
+			DrawLib::printLinha(xc + y0 - 1, yc + x0, xc - y0 + 1, yc + x0, Color(0, 0, 0), isTemp, true);
+			DrawLib::printLinha(xc + x0 - 1, yc + y0, xc - x0 + 1, yc + y0, Color(0, 0, 0), isTemp, true);
+			DrawLib::printLinha(xc - y0 + 1, yc - x0, xc + y0 - 1, yc - x0, Color(0, 0, 0), isTemp, true);
+			DrawLib::printLinha(xc - x0 + 1, yc - y0, xc + x0 - 1, yc - y0, Color(0, 0, 0), isTemp, true);
+		}
 		//octante 1
 		FrameBuffer::getInstance()->setTempPixel(xc + y0, yc + x0, cor);
 		//octante 2
@@ -289,6 +320,12 @@ void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, Color cor, bool 
 		FrameBuffer::getInstance()->setTempPixel(xc + y0, yc - x0, cor);
 	}
 	else {
+		if (fill) {
+			DrawLib::printLinha(xc + y0 - 1, yc + x0, xc - y0 + 1, yc + x0, Color(0, 0, 0), isTemp);
+			DrawLib::printLinha(xc + x0 - 1, yc + y0, xc - x0 + 1, yc + y0, Color(0, 0, 0), isTemp);
+			DrawLib::printLinha(xc - y0 + 1, yc - x0, xc + y0 - 1, yc - x0, Color(0, 0, 0), isTemp);
+			DrawLib::printLinha(xc - x0 + 1, yc - y0, xc + x0 - 1, yc - y0, Color(0, 0, 0), isTemp);
+		}
 		//octante 1
 		FrameBuffer::getInstance()->setPixel(xc + y0, yc + x0, cor);
 		//octante 2
@@ -305,12 +342,6 @@ void DrawLib::printPontocirculo(int xc, int yc, int x0, int y0, Color cor, bool 
 		FrameBuffer::getInstance()->setPixel(xc + x0, yc - y0, cor);
 		//octante 8
 		FrameBuffer::getInstance()->setPixel(xc + y0, yc - x0, cor);
-	}
-	if (fill) {
-		DrawLib::printLinha(xc + y0 - 1, yc + x0, xc - y0 + 1, yc + x0, Color(0, 0, 0), isTemp);
-		DrawLib::printLinha(xc + x0 - 1, yc + y0, xc - x0 + 1, yc + y0, Color(0, 0, 0), isTemp);
-		DrawLib::printLinha(xc - y0 + 1, yc - x0, xc + y0 - 1, yc - x0, Color(0, 0, 0), isTemp);
-		DrawLib::printLinha(xc - x0 + 1, yc - y0, xc + x0 - 1, yc - y0, Color(0, 0, 0), isTemp);
 	}
 }
 
