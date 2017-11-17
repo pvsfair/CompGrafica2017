@@ -72,7 +72,8 @@ private:
 	std::vector<Color> fb;
 	std::vector<Color> fbTemp;
 	bool hasTempBuffer;
-
+	std::pair<int, int> janelaRecorteP1;
+	std::pair<int, int> janelaRecorteP2;
 
 public:
 	static FrameBuffer* getInstance();
@@ -88,7 +89,7 @@ public:
 	bool isTempBuffer() {
 		return hasTempBuffer;
 	}
-
+	void setJanelaRecorte(std::pair<int, int> p1, std::pair<int, int>p2);
 	inline void clearTempBuffer() {
 		fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
 		this->hasTempBuffer = true;

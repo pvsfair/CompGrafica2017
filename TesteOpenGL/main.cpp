@@ -6,6 +6,7 @@
 #include "DrawLib.h"
 #include "Math.h"
 #include "ColorPicker.h"
+#include "main.h"
 
 using namespace std;
 
@@ -121,6 +122,7 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 		FrameBuffer::getInstance()->toolSelected = 1;
 		click = pair<int, int>(-1, -1);
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Linha";
+		FrameBuffer::getInstance()->fillFigure = false;
 	}
 	else if (key == '2') {
 		FrameBuffer::getInstance()->toolSelected = 2;
@@ -139,14 +141,21 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 	else if (key == '5') {
 		FrameBuffer::getInstance()->toolSelected = 5;
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Pintar Ponto";
+		FrameBuffer::getInstance()->fillFigure = false;
 	}
 	else if (key == '6') {
 		FrameBuffer::getInstance()->toolSelected = 6;
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Poligono";
 		DrawLib::clearPoligonoDrawing();
 	}
+	else if (key == '7') {
+		FrameBuffer::getInstance()->toolSelected = 7;
+		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Janela de recorte";
+		FrameBuffer::getInstance()->fillFigure = false;
+	}
 	else if (key == 'f' || key == 'F') {
-		FrameBuffer::getInstance()->fillFigure = !FrameBuffer::getInstance()->fillFigure;
+		if(FrameBuffer::getInstance()->toolSelected != 7 && FrameBuffer::getInstance()->toolSelected != 5 && FrameBuffer::getInstance()->toolSelected != 1)
+			FrameBuffer::getInstance()->fillFigure = !FrameBuffer::getInstance()->fillFigure;
 	}
 	else if (key == 'c' || key == 'C') {
 		FrameBuffer::getInstance()->clearFrameBuffer();
@@ -225,6 +234,17 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				FrameBuffer::getInstance()->copyTempToFinalBuffer();
 			}
 			break;
+		case 7:
+			if (state == GLUT_DOWN) {
+				click = pair<int, int>(xScreen, yScreen);
+				temp = FrameBuffer::getInstance();
+			}
+			else if (state == GLUT_UP) {
+				temp = nullptr;
+				click = pair<int, int>(-1, -1);
+				FrameBuffer::getInstance()->copyTempToFinalBuffer();
+			}
+			break;
 		default:
 			if (state == GLUT_UP) {
 				//std::cout << xScreen << ',' << yScreen << endl;
@@ -274,6 +294,11 @@ void motionFunc(int x, int y) {
 			int w = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), pair<int, int>(xScreen, yScreen));
 			int h = Math::distanceBtwPoints(pair<int, int>(click.first, yScreen), click);
 			DrawLib::printElipse(click.first, yScreen, w, h, ColorPicker::brushColor(), true);
+		}
+		break;
+	case 7:
+		if (click.first >= 0) {
+			DrawLib::drawPoligonoRecorte(click, ponto);
 		}
 		break;
 	}

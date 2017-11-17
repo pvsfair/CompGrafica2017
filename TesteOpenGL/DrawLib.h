@@ -55,6 +55,8 @@ public:
 	static void clearPoligonoDrawing() {
 		DrawLib::pontosPoligono = new std::vector<std::pair<int, int>>();
 	}
+
+	static void drawPoligonoRecorte(std::pair<int, int> p1, std::pair<int, int> p2);
 	~DrawLib();
 };
 

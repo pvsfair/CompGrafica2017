@@ -49,3 +49,9 @@ Color FrameBuffer::getTempPixel(int x, int y)
 {
 	return this->fbTemp[y * nCol + x];
 }
+
+void FrameBuffer::setJanelaRecorte(std::pair<int, int> p1, std::pair<int, int> p2)
+{
+	this->janelaRecorteP1 = p1;
+	this->janelaRecorteP2 = p2;
+}

@@ -361,6 +361,15 @@ void DrawLib::printPontoElipse(int xc, int yc, int x, int y, Color cor, bool isT
 	}
 }
 
+void DrawLib::drawPoligonoRecorte(std::pair<int, int> p1, std::pair<int, int> p2)
+{
+	FrameBuffer::getInstance()->clearTempBuffer();
+	DrawLib::printLinha(p1.first, p1.second, p1.first, p2.second, Color(0, 0, 0), true, true);
+	DrawLib::printLinha(p1.first, p1.second, p2.first, p1.second, Color(0, 0, 0), true, true);
+	DrawLib::printLinha(p2.first, p2.second, p1.first, p2.second, Color(0, 0, 0), true, true);
+	DrawLib::printLinha(p2.first, p2.second, p2.first, p1.second, Color(0, 0, 0), true, true);
+}
+
 DrawLib::~DrawLib()
 {
 }
