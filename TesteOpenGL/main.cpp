@@ -152,6 +152,7 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 		FrameBuffer::getInstance()->toolSelected = 7;
 		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Janela de recorte";
 		FrameBuffer::getInstance()->fillFigure = false;
+		FrameBuffer::getInstance()->clearFrameBuffer();
 	}
 	else if (key == 'f' || key == 'F') {
 		if(FrameBuffer::getInstance()->toolSelected != 7 && FrameBuffer::getInstance()->toolSelected != 5 && FrameBuffer::getInstance()->toolSelected != 1)
@@ -234,7 +235,7 @@ void mouseFunc(int button, int state, int x, int y) {//Called on mouseKeyUp or m
 				FrameBuffer::getInstance()->copyTempToFinalBuffer();
 			}
 			break;
-		case 7:
+		case 7:// Polígono Recorte
 			if (state == GLUT_DOWN) {
 				click = pair<int, int>(xScreen, yScreen);
 				temp = FrameBuffer::getInstance();
@@ -285,8 +286,9 @@ void motionFunc(int x, int y) {
 	case 2:// Círculo
 		if (click.first >= 0) {
 			int raio = Math::distanceBtwPoints(click, pair<int, int>(xScreen, yScreen));
-
+			cout << "printando cilculo: ";
 			DrawLib::printCirculo(click, raio, ColorPicker::brushColor(), FrameBuffer::getInstance()->fillFigure, true);
+			cout << endl;
 		}
 		break;
 	case 3:// Elipse

@@ -72,10 +72,11 @@ private:
 	std::vector<Color> fb;
 	std::vector<Color> fbTemp;
 	bool hasTempBuffer;
+
+public:
 	std::pair<int, int> janelaRecorteP1;
 	std::pair<int, int> janelaRecorteP2;
 
-public:
 	static FrameBuffer* getInstance();
 	~FrameBuffer();
 	static const int nCol = 125;
@@ -90,6 +91,12 @@ public:
 		return hasTempBuffer;
 	}
 	void setJanelaRecorte(std::pair<int, int> p1, std::pair<int, int>p2);
+	bool hasJanelaDeCorte() {
+		if (this->janelaRecorteP1.first != -1)
+			return true;
+		else
+			return false;
+	}
 	inline void clearTempBuffer() {
 		fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
 		this->hasTempBuffer = true;
@@ -108,8 +115,6 @@ public:
 		}
 		hasTempBuffer = false;
 	}
-
-
 
 	bool fillFigure;
 	std::string buttonSelected;

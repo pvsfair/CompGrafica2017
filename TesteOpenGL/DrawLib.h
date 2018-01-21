@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "FrameBuffer.h"
+
 struct PolFillTable {
 	int yMin;
 	int yMax;
@@ -57,6 +58,32 @@ public:
 	}
 
 	static void drawPoligonoRecorte(std::pair<int, int> p1, std::pair<int, int> p2);
+
+	typedef int OutCode;
+
+	static const int INSIDE = 0; // 0000
+	static const int LEFT = 1;   // 0001
+	static const int RIGHT = 2;  // 0010
+	static const int BOTTOM = 4; // 0100
+	static const int TOP = 8;    // 1000
+
+	static OutCode ComputeOutCode(int x, int y) {
+
+		OutCode code;
+
+		code = INSIDE;          // initialised as being inside of [[clip window]]
+
+		if (x < FrameBuffer::getInstance()->janelaRecorteP1.first)           // to the left of clip window
+			code |= LEFT;
+		else if (x > FrameBuffer::getInstance()->janelaRecorteP1.second)      // to the right of clip window
+			code |= RIGHT;
+		if (y < FrameBuffer::getInstance()->janelaRecorteP2.first)           // below the clip window
+			code |= BOTTOM;
+		else if (y > FrameBuffer::getInstance()->janelaRecorteP2.second)      // above the clip window
+			code |= TOP;
+
+		return code;
+	}
 	~DrawLib();
 };
 

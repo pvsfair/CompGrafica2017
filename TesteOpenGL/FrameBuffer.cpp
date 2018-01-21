@@ -18,6 +18,7 @@ FrameBuffer * FrameBuffer::getInstance()
 		instance->buttonSelected = "Nenhuma Ferramenta Selecionada";
 		instance->fillFigure = false;
 		instance->toolSelected = 0;
+		instance->setJanelaRecorte(std::pair<int, int>(-1, -1), std::pair<int, int>(-1, -1));
 	}
 	return instance;
 }
@@ -52,6 +53,24 @@ Color FrameBuffer::getTempPixel(int x, int y)
 
 void FrameBuffer::setJanelaRecorte(std::pair<int, int> p1, std::pair<int, int> p2)
 {
-	this->janelaRecorteP1 = p1;
-	this->janelaRecorteP2 = p2;
+	if (p1.first < p2.first) {
+		if (p1.second < p2.second) {
+			this->janelaRecorteP1 = p1;
+			this->janelaRecorteP2 = p2;
+		}
+		else {
+			this->janelaRecorteP1 = std::pair<int, int>(p1.first, p2.second);
+			this->janelaRecorteP2 = std::pair<int, int>(p2.first, p1.second);
+		}
+	}
+	else {
+		if (p1.second < p2.second) {
+			this->janelaRecorteP1 = std::pair<int, int>(p2.first, p1.second);
+			this->janelaRecorteP2 = std::pair<int, int>(p1.first, p2.second);
+		}
+		else {
+			this->janelaRecorteP1 = p2;
+			this->janelaRecorteP2 = p1;
+		}
+	}
 }
