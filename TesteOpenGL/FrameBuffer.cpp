@@ -4,8 +4,10 @@
 FrameBuffer::FrameBuffer()
 {
 	fb = std::vector<Color>(nLinhas * nCol, Color());
-	fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1,-1,-1));
+	fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
+	fbPolis = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
 	hasTempBuffer = false;
+	poligonos = new std::vector<Poligono>();
 }
 
 FrameBuffer* FrameBuffer::instance = nullptr;
@@ -49,6 +51,18 @@ void FrameBuffer::setTempPixel(int x, int y, Color color)
 Color FrameBuffer::getTempPixel(int x, int y)
 {
 	return this->fbTemp[y * nCol + x];
+}
+
+void FrameBuffer::setPolisPixel(int x, int y, Color color)
+{
+	if (x >= 0 && y >= 0 && x < this->nCol && y < this->nLinhas) {
+		this->fbPolis[y * nCol + x] = color;
+	}
+}
+
+Color FrameBuffer::getPolisPixel(int x, int y)
+{
+	return this->fbPolis[y * nCol + x];
 }
 
 void FrameBuffer::setJanelaRecorte(std::pair<int, int> p1, std::pair<int, int> p2)

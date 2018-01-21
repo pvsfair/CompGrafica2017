@@ -27,6 +27,7 @@ class DrawLib
 private:
 	static void reflexao(int *x0, int *y0, int *x1, int *y1, bool trocas[]);
 	static void printPontoLinha(int x, int y, bool trocas[], Color cor, bool isTemp);
+	static void printPontoLinhaPoligono(int x, int y, bool trocas[], Color cor);
 	static void printPontocirculo(int xc, int yc, int x0, int y0, Color cor, bool fill = false, bool isTemp = false);
 	static void printPontoElipse(int xc, int yc, int x, int y, Color cor, bool isTemp);
 	static std::vector<std::pair<int, int>> *pontosPoligono;
@@ -35,6 +36,10 @@ public:
 	static void printLinha(int x0, int y0, int x1, int y1, Color cor = Color(0, 0, 0), bool isTemp = false, bool innerFunc = false);
 	static void printLinha(std::pair<int, int> p1, std::pair<int, int> p2, Color cor = Color(0, 0, 0), bool isTemp = false) {
 		return printLinha(p1.first, p1.second, p2.first, p2.second, cor, isTemp);
+	}
+	static void printLinhaPoligono(int x0, int y0, int x1, int y1, Color cor = Color(0, 0, 0));
+	static void printLinhaPoligono(std::pair<int, int> p1, std::pair<int, int> p2, Color cor = Color(0, 0, 0)) {
+		return printLinhaPoligono(p1.first, p1.second, p2.first, p2.second, cor);
 	}
 	static void printCirculo(int xc, int yc, int raio, Color cor = Color(0, 0, 0), bool fill = false, bool isTemp = false);
 	static void printCirculo(std::pair<int, int> centro, int raio, Color cor = Color(0, 0, 0), bool fill = false, bool isTemp = false) {

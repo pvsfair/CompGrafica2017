@@ -120,12 +120,15 @@
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Poligono.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="DrawLib.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="Poligono.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

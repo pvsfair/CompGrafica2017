@@ -1,35 +1,8 @@
 #pragma once
 #include <string>
 #include <vector> 
-
-struct Color {
-	int r;
-	int g;
-	int b;
-	Color() {
-		this->r = 255;
-		this->g = 255;
-		this->b = 255;
-	}
-	Color(int r, int g, int b) {
-		if (r > 255)
-			r = 255;
-		if (g > 255)
-			g = 255;
-		if (b > 255)
-			b = 255;
-		this->r = r;
-		this->g = g;
-		this->b = b;
-	}
-	bool operator==(Color other) {
-		return (this->r == other.r) && (this->g == other.g) && (this->b == other.b);
-	}
-
-	bool operator!=(Color other) {
-		return (this->r != other.r) || (this->g != other.g) || (this->b != other.b);
-	}
-};
+#include "Poligono.h"
+#include "Color.h"
 
 struct ColorHSV : Color {
 	ColorHSV() {
@@ -67,11 +40,13 @@ class FrameBuffer
 {
 
 private:
-	static FrameBuffer* instance;
+	static FrameBuffer *instance;
 	FrameBuffer();
 	std::vector<Color> fb;
 	std::vector<Color> fbTemp;
+	std::vector<Color> fbPolis;
 	bool hasTempBuffer;
+	std::vector<Poligono> *poligonos;
 
 public:
 	std::pair<int, int> janelaRecorteP1;
@@ -87,6 +62,10 @@ public:
 
 	void setTempPixel(int x, int y, Color color);
 	Color getTempPixel(int x, int y);
+
+	void setPolisPixel(int x, int y, Color color);
+	Color getPolisPixel(int x, int y);
+
 	bool isTempBuffer() {
 		return hasTempBuffer;
 	}
@@ -101,6 +80,13 @@ public:
 		fbTemp = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
 		this->hasTempBuffer = true;
 	}
+	inline void redrawPolisBuffer() {
+		fbPolis = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
+		for each (Poligono poli in *this->poligonos)
+		{
+			poli.redrawPoli();
+		}
+	}
 
 	inline void clearFrameBuffer() {
 		fb = std::vector<Color>(nLinhas * nCol, Color());
@@ -114,6 +100,14 @@ public:
 			}
 		}
 		hasTempBuffer = false;
+	}
+
+	inline void addPoligono(Poligono *pol) {
+		poligonos->emplace_back(*pol);
+	}
+
+	inline std::vector<Poligono> getPoligonos() {
+		return *poligonos;
 	}
 
 	bool fillFigure;

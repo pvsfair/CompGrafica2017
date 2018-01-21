@@ -87,8 +87,10 @@ void displayCB(void)		/* function called whenever redisplay needed */
 	Color c;
 	for (int i = 0; i < FrameBuffer::nLinhas; i++) {
 		for (int j = 0; j < FrameBuffer::nCol; j++) {
-			if (fb->isTempBuffer() && fb->getTempPixel(i, j) != Color(-1, -1, -1)) {
-				c = fb->getTempPixel(i, j);
+			if ((c = fb->getPolisPixel(i, j)) != Color(-1, -1, -1)) {	
+			}
+			else if (fb->isTempBuffer() && (c = fb->getTempPixel(i, j)) != Color(-1, -1, -1)) {
+				//c = fb->getTempPixel(i, j);
 				//cout << "pintando com temp" << endl;
 			}
 			else {
@@ -342,25 +344,21 @@ int main(int argc, char *argv[])
 	/*
 
 	*/
-	/*
+	
 	std::vector<std::pair<int, int>> poli1;
 	poli1.emplace_back(0, 50);
-	poli1.emplace_back(20, 90);
-	poli1.emplace_back(50, 30);
-	poli1.emplace_back(80, 90);
-	poli1.emplace_back(100, 50);
-	poli1.emplace_back(80, 10);
-	poli1.emplace_back(50, 70);
-	poli1.emplace_back(20, 10);
-	poli1.emplace_back(20, 20);
-	poli1.emplace_back(20, 50);
 	poli1.emplace_back(50, 50);
-	poli1.emplace_back(50, 20);
-	poli1.emplace_back(0, 50);
-	poli1.emplace_back(20, 53);
-	poli1.emplace_back(30, 45);
-	DrawLib::printPoligono(poli1, true);
-	*/
+	poli1.emplace_back(50, 0);
+	poli1.emplace_back(0, 0);
+	//DrawLib::printPoligono(poli1);
+	Poligono pol(&poli1, Color(0,0,0));
+	//pol.redrawPoli();
+	pol.translacao(32, 32);
+	FrameBuffer::getInstance()->addPoligono(&pol);
+	pol.escala(1.2, 1.2);
+	FrameBuffer::getInstance()->addPoligono(&pol);
+	FrameBuffer::getInstance()->redrawPolisBuffer();
+	//pol.redrawPoli();
 
 	int win;
 
