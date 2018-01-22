@@ -121,6 +121,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Poligono.cpp" />
+    <ClCompile Include="Poligono3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Color.h" />
@@ -129,6 +130,7 @@
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Poligono.h" />
+    <ClInclude Include="Poligono3D.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

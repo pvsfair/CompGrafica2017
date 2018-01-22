@@ -222,10 +222,10 @@ void DrawLib::printPoligono(std::vector<std::pair<int, int>> pontos, Color corBo
 
 			std::sort(pointsX.begin(), pointsX.end());
 			for (size_t i = 0; i < pointsX.size(); i += 2) {
-				std::cout << pointsX.size() << ','<<  i << endl;
-				cout << y << endl;
-				cout << pointsX[i] << ',' << endl;
-				cout << pointsX[i + 1] << endl << endl;
+				//std::cout << pointsX.size() << ','<<  i << endl;
+				//cout << y << endl;
+				//cout << pointsX[i] << ',' << endl;
+				//cout << pointsX[i + 1] << endl << endl;
 				DrawLib::printLinhaPoligono(pointsX[i], y, pointsX[i + 1], y, corFill);
 			}
 		}

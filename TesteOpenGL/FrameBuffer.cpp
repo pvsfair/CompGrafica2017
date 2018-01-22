@@ -8,6 +8,7 @@ FrameBuffer::FrameBuffer()
 	fbPolis = std::vector<Color>(nLinhas * nCol, Color(-1, -1, -1));
 	hasTempBuffer = false;
 	poligonos = new std::vector<Poligono>();
+	poligonos3d = new std::vector<Poligono3D*>();
 }
 
 FrameBuffer* FrameBuffer::instance = nullptr;

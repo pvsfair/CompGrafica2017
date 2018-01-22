@@ -119,49 +119,68 @@ pair<int, int> click = pair<int, int>(-1, -1);
 
 void keyCB(unsigned char key, int x, int y)	/* called on key press */
 {
+	FrameBuffer* fb = FrameBuffer::getInstance();
 	if (key == 'q') exit(0);
 	else if (key == '1') {
-		FrameBuffer::getInstance()->toolSelected = 1;
+		fb->toolSelected = 1;
 		click = pair<int, int>(-1, -1);
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Linha";
-		FrameBuffer::getInstance()->fillFigure = false;
+		fb->buttonSelected = "Ferramenta: Linha";
+		fb->fillFigure = false;
 	}
 	else if (key == '2') {
-		FrameBuffer::getInstance()->toolSelected = 2;
+		fb->toolSelected = 2;
 		click = pair<int, int>(-1, -1);
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Círculo";
+		fb->buttonSelected = "Ferramenta: Círculo";
 	}
 	else if (key == '3') {
-		FrameBuffer::getInstance()->toolSelected = 3;
+		fb->toolSelected = 3;
 		click = pair<int, int>(-1, -1);
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Elipse";
+		fb->buttonSelected = "Ferramenta: Elipse";
 	}
 	else if (key == '4') {
-		FrameBuffer::getInstance()->toolSelected = 4;
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Baldinho";
+		fb->toolSelected = 4;
+		fb->buttonSelected = "Ferramenta: Baldinho";
 	}
 	else if (key == '5') {
-		FrameBuffer::getInstance()->toolSelected = 5;
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Pintar Ponto";
-		FrameBuffer::getInstance()->fillFigure = false;
+		fb->toolSelected = 5;
+		fb->buttonSelected = "Ferramenta: Pintar Ponto";
+		fb->fillFigure = false;
 	}
 	else if (key == '6') {
-		FrameBuffer::getInstance()->toolSelected = 6;
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Poligono";
+		fb->toolSelected = 6;
+		fb->buttonSelected = "Ferramenta: Poligono";
 		DrawLib::clearPoligonoDrawing();
 	}
 	else if (key == '7') {
-		FrameBuffer::getInstance()->toolSelected = 7;
-		FrameBuffer::getInstance()->buttonSelected = "Ferramenta: Janela de recorte";
-		FrameBuffer::getInstance()->fillFigure = false;
-		FrameBuffer::getInstance()->clearFrameBuffer();
+		fb->toolSelected = 7;
+		fb->buttonSelected = "Ferramenta: Janela de recorte";
+		fb->fillFigure = false;
+		fb->clearFrameBuffer();
 	}
 	else if (key == 'f' || key == 'F') {
-		if(FrameBuffer::getInstance()->toolSelected != 7 && FrameBuffer::getInstance()->toolSelected != 5 && FrameBuffer::getInstance()->toolSelected != 1)
-			FrameBuffer::getInstance()->fillFigure = !FrameBuffer::getInstance()->fillFigure;
+		if (fb->toolSelected != 7 && fb->toolSelected != 5 && fb->toolSelected != 1)
+			fb->fillFigure = !fb->fillFigure;
 	}
 	else if (key == 'c' || key == 'C') {
-		FrameBuffer::getInstance()->clearFrameBuffer();
+		fb->clearFrameBuffer();
+	}
+	else if (key == 'w' || key == 'W')
+	{
+		Poligono3D* poli3d = (*fb->getPoligonos3D())[0];
+		poli3d->rotacao(0, 2);
+		fb->redrawPolisBuffer();
+	}
+	else if (key == 'e' || key == 'E')
+	{
+		Poligono3D* poli3d = (*fb->getPoligonos3D())[0];
+		poli3d->rotacao(1, 2);
+		fb->redrawPolisBuffer();
+	}
+	else if (key == 'r' || key == 'R')
+	{
+		Poligono3D* poli3d = (*fb->getPoligonos3D())[0];
+		poli3d->rotacao(2, 2);
+		fb->redrawPolisBuffer();
 	}
 	//glutPostRedisplay();
 	//std::cout << key << endl;
@@ -344,7 +363,7 @@ int main(int argc, char *argv[])
 	/*
 
 	*/
-	
+	/* teste polígono 2D
 	std::vector<std::pair<int, int>> poli1;
 	poli1.emplace_back(0, 50);
 	poli1.emplace_back(50, 50);
@@ -359,6 +378,37 @@ int main(int argc, char *argv[])
 	FrameBuffer::getInstance()->addPoligono(&pol);
 	FrameBuffer::getInstance()->redrawPolisBuffer();
 	//pol.redrawPoli();
+	*/
+
+	std::vector<ponto3d> vertices;
+	vertices.emplace_back(10, 10, 10);
+	vertices.emplace_back(20, 10, 10);
+	vertices.emplace_back(20, 20, 10);
+	vertices.emplace_back(10, 20, 10);
+	vertices.emplace_back(10, 10, 20);
+	vertices.emplace_back(20, 10, 20);
+	vertices.emplace_back(20, 20, 20);
+	vertices.emplace_back(10, 20, 20);
+	std::vector<face3d> faces;
+	faces.emplace_back(0, 4, 5);
+	faces.emplace_back(0, 5, 1);
+	faces.emplace_back(1, 5, 6);
+	faces.emplace_back(1, 6, 2);
+	faces.emplace_back(2, 6, 7);
+	faces.emplace_back(2, 7, 3);
+	faces.emplace_back(3, 7, 4);
+	faces.emplace_back(3, 4, 0);
+	Poligono3D *poli3d = new Poligono3D(vertices, faces);
+	poli3d->translacao(15, 15, 30);
+	poli3d->escala(3, 3, 3);
+	Poligono3D *poli3d2 = new Poligono3D(vertices, faces);
+	//poli3d.redrawPoli(50);
+	FrameBuffer::getInstance()->addPoligono3d(poli3d);
+	//poli3d.rotacao(0, 90);
+	poli3d2->translacao(13, 0, 0);
+	//FrameBuffer::getInstance()->addPoligono3d(poli3d2);
+	FrameBuffer::getInstance()->redrawPolisBuffer();
+
 
 	int win;
 

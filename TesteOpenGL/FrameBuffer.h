@@ -2,6 +2,7 @@
 #include <string>
 #include <vector> 
 #include "Poligono.h"
+#include "Poligono3D.h"
 #include "Color.h"
 
 struct ColorHSV : Color {
@@ -47,6 +48,7 @@ private:
 	std::vector<Color> fbPolis;
 	bool hasTempBuffer;
 	std::vector<Poligono> *poligonos;
+	std::vector<Poligono3D*> *poligonos3d;
 
 public:
 	std::pair<int, int> janelaRecorteP1;
@@ -86,6 +88,10 @@ public:
 		{
 			poli.redrawPoli();
 		}
+		for each (Poligono3D* poli in *this->poligonos3d)
+		{
+			poli->redrawPoli(50);
+		}
 	}
 
 	inline void clearFrameBuffer() {
@@ -108,6 +114,14 @@ public:
 
 	inline std::vector<Poligono> getPoligonos() {
 		return *poligonos;
+	}
+
+	inline void addPoligono3d(Poligono3D *pol) {
+		poligonos3d->emplace_back(pol);
+	}
+
+	inline std::vector<Poligono3D*>* getPoligonos3D() {
+		return poligonos3d;
 	}
 
 	bool fillFigure;
