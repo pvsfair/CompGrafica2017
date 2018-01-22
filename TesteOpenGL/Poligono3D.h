@@ -41,7 +41,17 @@ public:
 		return ponto3d(b.x - a.x, b.y - a.y, b.z - a.z);
 	}
 	inline ponto3d calculaProdutoVetorial(ponto3d u, ponto3d v) {
+		return ponto3d(u.y*v.z - u.z*v.y, u.x*v.z - u.z*v.x, u.x*v.y - u.y*v.x);
+	}
 
+	inline int calculaProdutoEscalar(ponto3d u, ponto3d v) {
+		return u.x*v.x + u.y*v.y + u.z*v.z;
+	}
+
+	inline ponto3d getFaceCenter(face3d face) {
+		return ponto3d((this->vertices[face.first].x+ this->vertices[face.second].x+ this->vertices[face.third].x)/3, 
+					(this->vertices[face.first].y + this->vertices[face.second].y + this->vertices[face.third].y) / 3, 
+					(this->vertices[face.first].z + this->vertices[face.second].z + this->vertices[face.third].z) / 3);
 	}
 
 	inline ponto3d getCenter()

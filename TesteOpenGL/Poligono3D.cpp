@@ -11,43 +11,29 @@ Poligono3D::Poligono3D(std::vector<ponto3d> vertices, std::vector<face3d> faces)
 }
 
 void Poligono3D::redrawPoli(float d)
-{/*std::pair<int, int> toPrint1, toPrint2, toPrint3;
-	//this->rotacao(0, 45);
-	//this->rotacao(1, 45);
-	for each (face3d face in faces)
-	{
-		toPrint1.first = this->vertices[face.first].x * d / this->vertices[face.first].z;
-		toPrint1.second = this->vertices[face.first].y * d / this->vertices[face.first].z;
-		toPrint2.first = this->vertices[face.second].x * d / this->vertices[face.second].z;
-		toPrint2.second = this->vertices[face.second].y * d / this->vertices[face.second].z;
-		toPrint3.first = this->vertices[face.third].x * d / this->vertices[face.third].z;
-		toPrint3.second = this->vertices[face.third].y * d / this->vertices[face.third].z;
-
-		DrawLib::printLinhaPoligono(toPrint1, toPrint2);
-		DrawLib::printLinhaPoligono(toPrint2, toPrint3);
-		DrawLib::printLinhaPoligono(toPrint3, toPrint1);
-	}
-	//this->rotacao(1, -45);
-	//this->rotacao(0, -45);
-*/
+{
 	std::vector<std::pair<int, int>> toPrint(3);
 	//this->rotacao(0, 45);
 	//this->rotacao(1, 45);
 	for each (face3d face in faces)
-	{	
-
+	{
+		ponto3d u = calculaVetor(this->vertices[face.first], this->vertices[face.second]);
+		ponto3d v = calculaVetor(this->vertices[face.second], this->vertices[face.third]);
+		ponto3d normal = calculaProdutoVetorial(u, v);
+		if (calculaProdutoEscalar(normal, calculaVetor(this->getFaceCenter(face), ponto3d(0, 0, 0))) < 0) continue;
 
 		toPrint[0].first = this->vertices[face.first].x * d / this->vertices[face.first].z;
 		toPrint[0].second = this->vertices[face.first].y * d / this->vertices[face.first].z;
+
 		toPrint[1].first = this->vertices[face.second].x * d / this->vertices[face.second].z;
 		toPrint[1].second = this->vertices[face.second].y * d / this->vertices[face.second].z;
 		toPrint[2].first = this->vertices[face.third].x * d / this->vertices[face.third].z;
 		toPrint[2].second = this->vertices[face.third].y * d / this->vertices[face.third].z;
 
 		DrawLib::printPoligono(toPrint, Color(0, 0, 0), true, Color(255, 0, 0));
-		//DrawLib::printLinhaPoligono(toPrint1, toPrint2);
-		//DrawLib::printLinhaPoligono(toPrint2, toPrint3);
-		//DrawLib::printLinhaPoligono(toPrint3, toPrint1);
+		//DrawLib::printLinhaPoligono(toPrint[0], toPrint[1]);
+		//DrawLib::printLinhaPoligono(toPrint[1], toPrint[2]);
+		//DrawLib::printLinhaPoligono(toPrint[2], toPrint[0]);
 	}
 	//this->rotacao(1, -45);
 	//this->rotacao(0, -45);
