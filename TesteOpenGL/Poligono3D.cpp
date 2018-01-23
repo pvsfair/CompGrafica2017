@@ -10,6 +10,21 @@ Poligono3D::Poligono3D(std::vector<ponto3d> vertices, std::vector<face3d> faces)
 	this->faces = faces;
 }
 
+void Poligono3D::redrawPoliOrtho() {
+	std::vector<std::pair<int, int>> toPrint(3);
+	for each (face3d face in faces)
+	{
+		
+		toPrint[0].first = this->vertices[face.first].x;
+		toPrint[0].second = this->vertices[face.first].y;
+		toPrint[1].first = this->vertices[face.second].x;
+		toPrint[1].second = this->vertices[face.second].y;
+		toPrint[2].first = this->vertices[face.third].x;
+		toPrint[2].second = this->vertices[face.third].y;
+		DrawLib::printPoligono(toPrint, Color(0, 0, 0), true);
+	}
+}
+
 void Poligono3D::redrawPoli(float d)
 {
 	std::vector<std::pair<int, int>> toPrint(3);
@@ -19,8 +34,14 @@ void Poligono3D::redrawPoli(float d)
 	{
 		ponto3d u = calculaVetor(this->vertices[face.first], this->vertices[face.second]);
 		ponto3d v = calculaVetor(this->vertices[face.second], this->vertices[face.third]);
+		//std::cout << u.x << ", " << u.y << ", " << u.z << std::endl;
+		//std::cout << v.x << ", " << v.y << ", " << v.z << std::endl;
 		ponto3d normal = calculaProdutoVetorial(u, v);
-		if (calculaProdutoEscalar(normal, calculaVetor(this->getFaceCenter(face), ponto3d(0, 0, 0))) < 0) continue;
+		std::cout << normal.x << ", " << normal.y << ", " << normal.z << std::endl;
+		ponto3d camVec = normalizaVetor(calculaVetor(this->vertices[face.first], ponto3d(0, 0, 0)));
+		std::cout << camVec.x << ", " << camVec.y << ", " << camVec.z << std::endl;
+		std::cout << calculaProdutoEscalar(normal, camVec) << std::endl << std::endl;
+		if (calculaProdutoEscalar(normal, camVec) < 0) continue;
 
 		toPrint[0].first = this->vertices[face.first].x * d / this->vertices[face.first].z;
 		toPrint[0].second = this->vertices[face.first].y * d / this->vertices[face.first].z;

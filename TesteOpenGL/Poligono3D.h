@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Color.h"
+#include <cmath>
 struct ponto3d
 {
 	float x;
@@ -33,6 +34,7 @@ private:
 	Color cor;
 public:
 	Poligono3D(std::vector<ponto3d> vertices, std::vector<face3d> faces);
+	void redrawPoliOrtho();
 	void redrawPoli(float d);
 	void rotacao(int eixo, float theta);
 	void translacao(float x, float y, float z);
@@ -41,10 +43,16 @@ public:
 		return ponto3d(b.x - a.x, b.y - a.y, b.z - a.z);
 	}
 	inline ponto3d calculaProdutoVetorial(ponto3d u, ponto3d v) {
-		return ponto3d(u.y*v.z - u.z*v.y, u.x*v.z - u.z*v.x, u.x*v.y - u.y*v.x);
+		ponto3d p(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x);
+		return normalizaVetor(p);
 	}
 
-	inline int calculaProdutoEscalar(ponto3d u, ponto3d v) {
+	inline ponto3d normalizaVetor(ponto3d u) {
+		float f = round(sqrt(pow(u.x, 2) + pow(u.y, 2) + pow(u.z, 2)));
+		return ponto3d(u.x / f, u.y / f, u.z / f);
+	}
+
+	inline float calculaProdutoEscalar(ponto3d u, ponto3d v) {
 		return u.x*v.x + u.y*v.y + u.z*v.z;
 	}
 

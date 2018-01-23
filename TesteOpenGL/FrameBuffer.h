@@ -90,6 +90,7 @@ public:
 		}
 		for each (Poligono3D* poli in *this->poligonos3d)
 		{
+			//poli->redrawPoliOrtho();
 			poli->redrawPoli(50);
 		}
 	}

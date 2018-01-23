@@ -372,14 +372,15 @@ int main(int argc, char *argv[])
 	//DrawLib::printPoligono(poli1);
 	Poligono pol(&poli1, Color(0,0,0));
 	//pol.redrawPoli();
-	pol.translacao(32, 32);
 	FrameBuffer::getInstance()->addPoligono(&pol);
-	pol.escala(1.2, 1.2);
+	//pol.translacao(32, 32);
+	//pol.escala(1.2, 1.2);
+	pol.rotacao(20);
 	FrameBuffer::getInstance()->addPoligono(&pol);
 	FrameBuffer::getInstance()->redrawPolisBuffer();
 	//pol.redrawPoli();
-	*/
-
+	//*/
+	//*
 	std::vector<ponto3d> vertices;
 	//vertices.emplace_back(1, 1, 1);
 	//vertices.emplace_back(2, 2, 1);
@@ -394,12 +395,12 @@ int main(int argc, char *argv[])
 	vertices.emplace_back(10, 20, 20);
 	std::vector<face3d> faces;
 	//faces.emplace_back(0, 2, 1);
-	faces.emplace_back(0, 4, 5);
-	faces.emplace_back(0, 5, 1);
+	faces.emplace_back(0, 5, 4);
+	faces.emplace_back(0, 1, 5);
 	faces.emplace_back(1, 6, 5);
 	faces.emplace_back(1, 2, 6);
-	faces.emplace_back(2, 6, 7);
-	faces.emplace_back(2, 7, 3);
+	faces.emplace_back(2, 7, 6);
+	faces.emplace_back(2, 3, 7);
 	faces.emplace_back(3, 4, 7);
 	faces.emplace_back(3, 0, 4);
 	faces.emplace_back(4, 5, 6);
@@ -407,8 +408,8 @@ int main(int argc, char *argv[])
 	faces.emplace_back(0, 3, 2);
 	faces.emplace_back(0, 2, 1);
 	Poligono3D *poli3d = new Poligono3D(vertices, faces);
-	//poli3d->translacao(-9,-9,-9);
-	//poli3d->escala(3, 3, 3);
+	//poli3d->translacao(30,30,0);
+	//poli3d->escala(50, 50, 50);
 	//Poligono3D *poli3d2 = new Poligono3D(vertices, faces);
 	//poli3d.redrawPoli(50);
 	FrameBuffer::getInstance()->addPoligono3d(poli3d);
@@ -416,7 +417,7 @@ int main(int argc, char *argv[])
 	//poli3d2->translacao(13, 0, 0);
 	//FrameBuffer::getInstance()->addPoligono3d(poli3d2);
 	FrameBuffer::getInstance()->redrawPolisBuffer();
-
+	//*/
 
 	int win;
 
